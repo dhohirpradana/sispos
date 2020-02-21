@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -199,11 +200,6 @@ class _LoginPageState extends State<LoginPage> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
           ],
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
@@ -414,7 +410,6 @@ class _LoginPageState extends State<LoginPage> {
             Widget child,
           ) {
             if (connectivity == ConnectivityResult.none) {
-              // _showDialog();
               return Scaffold(
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -455,6 +450,19 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Container(
                     color: Colors.grey[200].withOpacity(0.7),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ClipPath(
+                        clipper: RoundedDiagonalPathClipper(),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 1.91,
+                          color: Color(0xff45b6fe).withOpacity(0.31),
+                        ),
+                      ),
+                    ],
                   ),
                   Positioned(
                       top: -MediaQuery.of(context).size.height * .15,
