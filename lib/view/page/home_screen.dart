@@ -16,10 +16,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [];
-
   void onTabTapped(int index) {
     setState(() {
+      // (_currentIndex == 0)
+      //     ? Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (BuildContext context) => BerandaPage()))
+      //     : (_currentIndex == 1)
+      //         ? Navigator.pushReplacement(
+      //             context,
+      //             MaterialPageRoute(
+      //                 builder: (BuildContext context) => RujukanPage()))
+      //         : (_currentIndex == 2)
+      //             ? Navigator.pushReplacement(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (BuildContext context) => PengajuanPage()))
+      //             : Navigator.pushReplacement(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (BuildContext context) => ForumPage()));
       _currentIndex = index;
     });
   }
@@ -136,6 +153,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: WillPopScope(
         onWillPop: onWillPop,
         child: Stack(
@@ -147,9 +165,7 @@ class _HomePageState extends State<HomePage> {
                 ? BerandaPage()
                 : (_currentIndex == 1)
                     ? RujukanPage()
-                    : (_currentIndex == 2)
-                        ? PengajuanPage()
-                        : ForumPage(),
+                    : (_currentIndex == 2) ? PengajuanPage() : ForumPage(),
             // ]),
             // ),
             Material(
@@ -217,8 +233,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  icon: new Icon(Icons.assignment),
-                  title: new Text(
+                  icon: Icon(Icons.assignment),
+                  title: Text(
                     'RUJUKAN',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),

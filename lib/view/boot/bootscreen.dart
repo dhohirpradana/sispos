@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sispos_pajak/view/page/home_screen.dart';
 import 'package:sispos_pajak/view/page/login.dart';
 
 class BootScreen extends StatefulWidget {
@@ -47,7 +45,7 @@ class _BootScreenState extends State<BootScreen> {
   }
 
   startTime() async {
-    var _duration = new Duration(seconds: 3);
+    var _duration = new Duration(seconds: 2);
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {

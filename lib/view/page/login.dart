@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
+import 'package:sispos_pajak/view/page/Home.dart';
 import 'package:sispos_pajak/view/page/home_screen.dart';
 import 'package:sispos_pajak/view/widget/bezier_container.dart';
 import 'package:http/http.dart' as http;
@@ -199,8 +200,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-          ],
+          boxShadow: <BoxShadow>[],
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
@@ -538,7 +538,8 @@ class _LoginPageState extends State<LoginPage> {
         );
         break;
       case LoginStatus.signIn:
-        return HomePage(signOut);
+        // return HomePage(signOut);
+        return RumahPage(signOut);
         break;
     }
   }
