@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
 import 'package:sispos_pajak/view/page/rujukan.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
 
@@ -22,6 +24,22 @@ class _RumahPageState extends State<RumahPage> {
     setState(() {
       widget.signOut();
     });
+  }
+
+  String nip = "", name = "", namanya = "", token = "", level = "";
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      level = preferences.getString("level");
+      nip = preferences.getString("nip");
+      name = preferences.getString("name");
+      // token = preferences.getString("token");
+    });
+    namanya = name.toUpperCase();
+    name = (level == "3")
+        ? "$namanya(ADMIN)"
+        : (level == "2") ? "$namanya(PETUGAS1)" : name = "$namanya(PETUGAS2)";
+    print("nama: $name");
   }
 
   Color primaryColor = Color(0xff0e2f44);
@@ -209,7 +227,14 @@ class _RumahPageState extends State<RumahPage> {
                                                 BorderRadius.circular(10),
                                             splashColor:
                                                 color3.withOpacity(0.5),
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PerekamanPage()),
+                                              );
+                                            },
                                             child: Container(
                                               color: Colors.transparent,
                                               height: 90,

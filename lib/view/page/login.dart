@@ -147,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
       String nip = data['nip'];
       String name = data['name'];
       String token = data['token'];
+      // String pass = data['pass'];
       if (value == 1) {
         setState(() {
           savePref(value, nip, name, level, token);
@@ -157,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
         if (level == "1" || level == "2" || level == "3") {
           print("value : $value");
           print(nip);
-          print(pass);
+          // print(pass);
           print(name);
           print(level);
           print(token);
@@ -299,6 +300,10 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 TextFormField(
+                    inputFormatters: [
+                      new BlacklistingTextInputFormatter(
+                          new RegExp('[\\.|\\,]')),
+                    ],
                     keyboardType: TextInputType.number,
                     validator: (e) {
                       if (e.isEmpty) {

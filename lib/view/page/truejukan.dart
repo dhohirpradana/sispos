@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class TruejukanPage extends StatefulWidget {
@@ -50,12 +50,18 @@ class HomePageState extends State<TruejukanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildBar(context),
-      body: Material(
-        child: ListView.builder(
-          itemCount: data == null ? 0 : data.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (data != null) {
+        appBar: buildBar(context),
+        body:
+            // FutureBuilder(
+            //     future: getData(), // your async method that returns a future
+            //     builder: (BuildContext context, AsyncSnapshot snapshot) {
+            //       if (snapshot.hasData) {
+            // return
+            Material(
+          child: ListView.builder(
+            itemCount:
+                data == null ? 0 : (data.length >= 51) ? 50 : data.length,
+            itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: InkWell(
                   splashColor: Colors.blue[300],
@@ -75,20 +81,13 @@ class HomePageState extends State<TruejukanPage> {
                   ),
                 ),
               );
-            } else {
-              return Container(
-                child: Text("Data tidak ada"),
-              );
-              // Fluttertoast.showToast(
-              //     msg: "Data tidak deitemukan",
-              //     toastLength: Toast.LENGTH_SHORT,
-              //     gravity: ToastGravity.CENTER,
-              //     timeInSecForIos: 1);
-            }
-          },
-        ),
-      ),
-    );
+            },
+          ),
+        )
+        // }
+        //   return Center(child: CircularProgressIndicator());
+        // }),
+        );
   }
 
   void _handleSearchStart() {
@@ -131,6 +130,10 @@ class HomePageState extends State<TruejukanPage> {
                     color: Colors.white,
                   );
                   this.appBarTitle = TextField(
+                    // inputFormatters: [
+                    //   new BlacklistingTextInputFormatter(
+                    //       new RegExp('[\\.|\\,]')),
+                    // ],
                     onSubmitted: (v) {
                       setState(() {
                         cariData = v;
