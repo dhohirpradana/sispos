@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sispos_pajak/view/page/rujukan.dart';
+import 'package:sispos_pajak/view/page/truejukan.dart';
 
 class RumahPage extends StatefulWidget {
   final VoidCallback signOut;
@@ -92,7 +94,14 @@ class _RumahPageState extends State<RumahPage> {
                                                 BorderRadius.circular(10),
                                             splashColor:
                                                 color3.withOpacity(0.5),
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TruejukanPage()),
+                                              );
+                                            },
                                             child: Container(
                                               color: Colors.transparent,
                                               height: 90,
@@ -302,41 +311,88 @@ class _RumahPageState extends State<RumahPage> {
                 ),
               ),
               // Container Dasar Widget
-              Container(
-                // Logout Button
-                padding: EdgeInsets.only(right: 10, top: 5),
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 10 / 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      splashColor: Colors.redAccent,
-                      onTap: () {
-                        logoutDialog();
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Icon(
-                            Icons.input,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            "Logout",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
-                          ),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height /
+                                      10 /
+                                      2,
+                                  left: 10),
+                              width: 35,
+                              child: Image(
+                                  image: AssetImage(
+                                      'lib/view/assets/images/logokabpati.png'))),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top:
+                                    MediaQuery.of(context).size.height / 10 / 2,
+                                left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "SISPOS PAJAK",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                                Text(
+                                  "SISTEM PENDATAAN OBJEK DAN SUBJEK PAJAK",
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.white),
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
+                    ],
+                  ),
+                  Container(
+                    // Logout Button
+                    padding: EdgeInsets.only(top: 5),
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 10 / 2,
+                        right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          splashColor: Colors.redAccent,
+                          onTap: () {
+                            logoutDialog();
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(
+                                Icons.input,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Logout",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               )
             ],
           ),
