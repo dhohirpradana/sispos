@@ -42,7 +42,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
               children: <Widget>[Text("© Babahaha 2020")],
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
           ],
         ),
@@ -470,7 +470,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(bottom: 10, top: 10),
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -564,7 +564,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(top: 10, bottom: 10),
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
