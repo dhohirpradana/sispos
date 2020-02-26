@@ -34,11 +34,12 @@ class _LoginPageState extends State<LoginPage> {
   LoginStatus _loginStatus = LoginStatus.signIn;
   final _key = new GlobalKey<FormState>();
 
-  savePref(
-      int value, String nip, String name, String level, String token) async {
+  savePref(int value, String id, String nip, String name, String level,
+      String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
+      preferences.setString("id", id);
       preferences.setString("level", level);
       preferences.setString("nip", nip);
       preferences.setString("name", name);
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     print(value);
     print(_loginStatus);
+    print(id);
     print(name);
     setState(() {
       value = preferences.getInt("value");
@@ -81,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
     // }
   }
 
+  String id;
   String pass;
   String nip;
   String name;
@@ -143,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
     new Future.delayed(new Duration(milliseconds: 0), () async {
       // String pass = data['pass'];
       int value = data['value'];
+      String id = data['id'];
       String level = data['level'];
       String nip = data['nip'];
       String name = data['name'];
@@ -150,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
       // String pass = data['pass'];
       if (value == 1) {
         setState(() {
-          savePref(value, nip, name, level, token);
+          savePref(value, id, nip, name, level, token);
           _loginStatus = LoginStatus.signIn;
         });
         Navigator.pop(context);

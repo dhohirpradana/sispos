@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class TruejukanPage extends StatefulWidget {
@@ -60,7 +59,7 @@ class HomePageState extends State<TruejukanPage> {
             Material(
           child: ListView.builder(
             itemCount:
-                data == null ? 0 : (data.length >= 51) ? 50 : data.length,
+                data == null ? 0 : (data.length > 505) ? 500 : data.length,
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: InkWell(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sispos_pajak/api/option_desa.dart';
 import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
 import 'package:sispos_pajak/view/page/rujukan.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
@@ -14,6 +15,11 @@ class RumahPage extends StatefulWidget {
 }
 
 class _RumahPageState extends State<RumahPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Color color1 = Color(0xffdaf8e3);
   Color color2 = Color(0xff97ebdb);
   Color color3 = Color(0xff00c2c7);
@@ -62,7 +68,7 @@ class _RumahPageState extends State<RumahPage> {
               Container(
                 // Dasar Widget
                 margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 7),
+                    top: MediaQuery.of(context).size.height / 6),
                 child: Material(
                   elevation: 3,
                   borderRadius: BorderRadius.only(
@@ -121,6 +127,7 @@ class _RumahPageState extends State<RumahPage> {
                                               );
                                             },
                                             child: Container(
+                                              padding: EdgeInsets.all(5),
                                               color: Colors.transparent,
                                               height: 90,
                                               width: MediaQuery.of(context)
@@ -171,8 +178,16 @@ class _RumahPageState extends State<RumahPage> {
                                                 BorderRadius.circular(10),
                                             splashColor:
                                                 color3.withOpacity(0.5),
-                                            onTap: () {},
+                                            onTap: () {
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //       builder: (context) =>
+                                              //           DesaOption()),
+                                              // );
+                                            },
                                             child: Container(
+                                              padding: EdgeInsets.all(5),
                                               color: Colors.transparent,
                                               height: 90,
                                               width: MediaQuery.of(context)
@@ -236,6 +251,7 @@ class _RumahPageState extends State<RumahPage> {
                                               );
                                             },
                                             child: Container(
+                                              padding: EdgeInsets.all(5),
                                               color: Colors.transparent,
                                               height: 90,
                                               width: MediaQuery.of(context)
@@ -288,6 +304,7 @@ class _RumahPageState extends State<RumahPage> {
                                                 color3.withOpacity(0.5),
                                             onTap: () {},
                                             child: Container(
+                                              padding: EdgeInsets.all(5),
                                               color: Colors.transparent,
                                               height: 90,
                                               width: MediaQuery.of(context)
@@ -326,7 +343,55 @@ class _RumahPageState extends State<RumahPage> {
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  Container(
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10),
+                                      elevation: 7,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(10),
+                                        splashColor: color3.withOpacity(0.5),
+                                        onTap: () {},
+                                        child: Container(
+                                          padding: EdgeInsets.all(5),
+                                          color: Colors.transparent,
+                                          height: 90,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.4,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons.help_outline,
+                                                      size: 32,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "PANDUAN",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -346,7 +411,7 @@ class _RumahPageState extends State<RumahPage> {
                           Container(
                               margin: EdgeInsets.only(
                                   top: MediaQuery.of(context).size.height /
-                                      10 /
+                                      7 /
                                       2,
                                   left: 10),
                               width: 35,
@@ -355,8 +420,7 @@ class _RumahPageState extends State<RumahPage> {
                                       'lib/view/assets/images/logokabpati.png'))),
                           Container(
                             margin: EdgeInsets.only(
-                                top:
-                                    MediaQuery.of(context).size.height / 10 / 2,
+                                top: MediaQuery.of(context).size.height / 7 / 2,
                                 left: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +448,7 @@ class _RumahPageState extends State<RumahPage> {
                     // Logout Button
                     padding: EdgeInsets.only(top: 5),
                     margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 10 / 2,
+                        top: MediaQuery.of(context).size.height / 7 / 2,
                         right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -418,6 +482,19 @@ class _RumahPageState extends State<RumahPage> {
                     ),
                   ),
                 ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          child: Text("© Babahaha 2020")),
+                    ],
+                  )
+                ],
               )
             ],
           ),
@@ -427,6 +504,7 @@ class _RumahPageState extends State<RumahPage> {
   }
 
   void logoutDialog() {
+    // String deviceid = await DeviceId.getID;
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -434,6 +512,7 @@ class _RumahPageState extends State<RumahPage> {
         return AlertDialog(
           elevation: 5,
           title: Text("Yakin keluar akun?"),
+          // content: Text(deviceid.toString()),
           actions: <Widget>[
             FlatButton(
               child: Text("Batal"),
