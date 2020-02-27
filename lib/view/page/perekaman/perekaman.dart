@@ -24,6 +24,12 @@ class _PerekamanPageState extends State<PerekamanPage> {
     getPref();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
+  }
+
   String idpref;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -1332,27 +1338,40 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
       "tanahluas": tanahLuas.toString(),
-      "tanahjenis": _tanah.toString()
+      "tanahjenis": _tanah.toString(),
+      "bangunanluas": bangunanLuas.toString(),
+      "bangunanbangun": bangunanTahunBangun.toString(),
+      "bangunanrenov": bangunanTahunRenov.toString(),
+      "bangunanjumlahlantai": bangunanLantaiJumlah.toString(),
+      "bangunandaya": bangunanListrikDaya.toString(),
+      "bangunanjumlah": bangunanJumlah.toString(),
+      "bangunanpenggunaan": _bangunanPenggunaan.toString(),
+      "bangunankondisi": _bangunanKondisi.toString(),
+      "bangunankonstruksi": _bangunanKonstruksi.toString(),
+      "bangunanatap": _bangunanAtap.toString(),
+      "bangunandinding": _bangunanDinding.toString(),
+      "bangunanlantai": _bangunanLantai.toString(),
+      "bangunanlangit": _bangunanLangit.toString()
     });
-    print(nopAsal.toString());
-    print(objekNamajalan.toString());
-    print(objekBlok.toString());
-    print(objekKec.toString());
-    print(objekDesa.toString());
-    print(objekRw.toString());
-    print(objekRt.toString());
-    print(_status.toString());
-    print(_kerja.toString());
-    print(subjekNama.toString());
-    print(subjekNamaJalan.toString());
-    print(subjekKab.toString());
-    print(subjekDesa.toString());
-    print(subjekRw.toString());
-    print(subjekRt.toString());
-    print(subjekKtp.toString());
-    print(formattedDate.toString());
-    print(_tanahLuas.toString());
-    print(_tanah.toString());
+    // print(nopAsal.toString());
+    // print(objekNamajalan.toString());
+    // print(objekBlok.toString());
+    // print(objekKec.toString());
+    // print(objekDesa.toString());
+    // print(objekRw.toString());
+    // print(objekRt.toString());
+    // print(_status.toString());
+    // print(_kerja.toString());
+    // print(subjekNama.toString());
+    // print(subjekNamaJalan.toString());
+    // print(subjekKab.toString());
+    // print(subjekDesa.toString());
+    // print(subjekRw.toString());
+    // print(subjekRt.toString());
+    // print(subjekKtp.toString());
+    // print(formattedDate.toString());
+    // print(_tanahLuas.toString());
+    // print(_tanah.toString());
 
     final data = jsonDecode(response.body);
 
@@ -1974,13 +1993,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
                           //     context, _bangunanJumlah, _bangunanListrikDaya);
                         },
                         textInputAction: TextInputAction.done,
-                        onSaved: (e) => bangunanJumlah = e,
+                        onSaved: (e) => bangunanListrikDaya = e,
                         onChanged: (e) {
                           setState(() {
                             // validationText = "";
                           });
                         },
-                        controller: bangunanJumlahController,
+                        controller: bangunanListrikDayaController,
                         obscureText: false,
                         decoration: InputDecoration(
                             border: UnderlineInputBorder(

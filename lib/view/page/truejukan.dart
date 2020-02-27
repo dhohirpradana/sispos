@@ -32,6 +32,12 @@ class HomePageState extends State<TruejukanPage> {
     cariData = "";
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
+  }
+
   Color primaryColor = Color(0xff0e2f44);
   Color secondColor = Color(0xff088da5);
 

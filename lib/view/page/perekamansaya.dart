@@ -83,42 +83,46 @@ class HomePageState extends State<RekamanSayaPage> {
         appBar: buildBar(context),
         body: Material(
           child: ListView.builder(
-            itemCount:
-                data == null ? 0 : data.length,
+            itemCount: data == null ? 0 : data.length,
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: InkWell(
                   splashColor: Colors.blue[300],
-                  // onDoubleTap: () {},
+                  onDoubleTap: () {},
                   child: Container(
                     padding:
                         EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),
                     child: Row(
                       children: <Widget>[
                         // Flexible(child: Text(data[index]["id"])),
+                        Text((index + 1).toString()),
+                        SizedBox(
+                          width: 10,
+                          child: Text("."),
+                        ),
                         Flexible(
                             child: Container(
                                 child: Text(data[index]["updated_at"]))),
                         SizedBox(
-                          width: 10,
+                          width: 20,
                         ),
                         Container(child: Text(data[index]["nop_asal"])),
                         // Container(child: Text(spopid.toString())),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.green,
-                            ),
-                            onPressed: () {}),
-                        IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {})
+                        // SizedBox(
+                        //   width: 5,
+                        // ),
+                        // IconButton(
+                        //     icon: Icon(
+                        //       Icons.edit,
+                        //       color: Colors.green,
+                        //     ),
+                        //     onPressed: () {}),
+                        // IconButton(
+                        //     icon: Icon(
+                        //       Icons.delete,
+                        //       color: Colors.red,
+                        //     ),
+                        //     onPressed: () {})
                       ],
                     ),
                   ),

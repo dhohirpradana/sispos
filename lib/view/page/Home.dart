@@ -22,6 +22,12 @@ class _RumahPageState extends State<RumahPage> {
     getPref();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
+  }
+
   Color color1 = Color(0xffdaf8e3);
   Color color2 = Color(0xff97ebdb);
   Color color3 = Color(0xff00c2c7);

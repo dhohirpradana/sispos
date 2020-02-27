@@ -27,6 +27,12 @@ class _LoginPageState extends State<LoginPage> {
     getPref();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
+  }
+
   final FocusNode _nipFocus = FocusNode();
   final FocusNode _passFocus = FocusNode();
 
