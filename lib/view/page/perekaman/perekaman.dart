@@ -143,7 +143,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
   int _value = 0;
   int _value1 = 4;
-  int _value2 = 0;
+  int _value2 = 1;
   int _value3 = 1;
   int _value4 = 1;
   int _value5 = 2;
@@ -339,7 +339,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   ),
                   TextFormField(
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(22),
+                        LengthLimitingTextInputFormatter(24),
                         WhitelistingTextInputFormatter(
                             RegExp("[0123456789\\.]")),
                       ],
@@ -348,6 +348,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       onFieldSubmitted: (term) {
                         _fieldFocusChange(
                             context, _nopAsalFocus, _objekNamaJalanFocus);
+                      },
+                      validator: (e) {
+                        if (e.length < 24) {
+                          return "Masukan 24 karakter NOP";
+                        }
                       },
                       textInputAction: TextInputAction.next,
                       onSaved: (e) => nopAsal = e,
@@ -443,8 +448,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       textCapitalization: TextCapitalization.characters,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(20),
-                        WhitelistingTextInputFormatter(RegExp(
-                            "[0123456789qwertyuiopasdfghjklzxcvbnm\\-\\,\\.\\_]")),
                       ],
                       keyboardType: TextInputType.text,
                       // validator: (e) {
@@ -1263,7 +1266,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 ],
               ),
             ),
-            (_tanah == 1) ? _rincianBangunan() : SizedBox(),
+            (_value2 == 0) ? _rincianBangunan() : SizedBox(),
           ],
         ));
   }
@@ -1328,6 +1331,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "subjekktp": subjekKtp.toString(),
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
+      "tanahluas": tanahLuas.toString(),
+      "tanahlenis": _tanah.toString()
     });
     print(nopAsal.toString());
     print(objekNamajalan.toString());
@@ -1346,6 +1351,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
     print(subjekRt.toString());
     print(subjekKtp.toString());
     print(formattedDate.toString());
+    print(_tanahLuas.toString());
+    print(_tanah.toString());
 
     final data = jsonDecode(response.body);
 
@@ -2518,9 +2525,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
                         ),
                       ],
                     ),
-                    Row(
-                      children: <Widget>[_tambahButton(), _batalTambahButton()],
-                    ),
+                    Row(children: <Widget>[
+                      _tambahButton(),
+                      (_bangunanke > 0) ? _batalTambahButton() : SizedBox(),
+                    ]),
                   ],
                 ),
               ),
@@ -2587,7 +2595,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
           onTap: () {
             _tanahLuas.requestFocus();
             setState(() {
-              (_bangunanke > 0) ? _bangunanke = _bangunanke - 1 : _bangunanke = 0;
+              (_bangunanke > 1)
+                  ? _bangunanke = _bangunanke - 1
+                  : _bangunanke = 1;
               print("batal : $_bangunanke");
             });
             // check();

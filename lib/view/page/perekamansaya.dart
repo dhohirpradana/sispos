@@ -3,21 +3,30 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
 
-class TruejukanPage extends StatefulWidget {
+class RekamanSayaPage extends StatefulWidget {
   @override
   HomePageState createState() => new HomePageState();
 }
 
-class HomePageState extends State<TruejukanPage> {
+class HomePageState extends State<RekamanSayaPage> {
+  String idpref;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      idpref = preferences.getString("id");
+      // token = preferences.getString("token");
+    });
+    print("id: $idpref");
+  }
+
   List data;
   Future<String> getData() async {
-    var response = await http.post(
-        Uri.encodeFull(BaseUrl.lihat),
-        body: {'namaCari': cariData},
-        headers: {"Accept": "application/json"});
-    print(cariData);
+    var response = await http.post(Uri.encodeFull(BaseUrl.rekamsaya),
+        body: {'user_id': idpref}, headers: {"Accept": "application/json"});
+    print("uid : $idpref");
     this.setState(() {
       data = jsonDecode(response.body);
     });
@@ -27,9 +36,19 @@ class HomePageState extends State<TruejukanPage> {
   @override
   void initState() {
     super.initState();
-    getData();
+    getPref();
+    Future.delayed(const Duration(milliseconds: 700), () {
+      getData();
+      setState(() {});
+    });
     _IsSearching = false;
     cariData = "";
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
   }
 
   Color primaryColor = Color(0xff0e2f44);
@@ -41,7 +60,7 @@ class HomePageState extends State<TruejukanPage> {
     color: Colors.white,
   );
   Widget appBarTitle = new Text(
-    "DATA RUJUKAN",
+    "PENGAJUAN SAYA",
     style: new TextStyle(color: Colors.white),
   );
   final TextEditingController _searchQuery = new TextEditingController();
@@ -51,13 +70,7 @@ class HomePageState extends State<TruejukanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: buildBar(context),
-        body:
-            // FutureBuilder(
-            //     future: getData(), // your async method that returns a future
-            //     builder: (BuildContext context, AsyncSnapshot snapshot) {
-            //       if (snapshot.hasData) {
-            // return
-            Material(
+        body: Material(
           child: ListView.builder(
             itemCount:
                 data == null ? 0 : (data.length > 505) ? 500 : data.length,
@@ -65,17 +78,35 @@ class HomePageState extends State<TruejukanPage> {
               return Card(
                 child: InkWell(
                   splashColor: Colors.blue[300],
-                  onDoubleTap: () {},
+                  // onDoubleTap: () {},
                   child: Container(
                     padding:
                         EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),
                     child: Row(
                       children: <Widget>[
-                        Flexible(child: Text(data[index]["nop"])),
+                        // Flexible(child: Text(data[index]["id"])),
+                        Flexible(
+                            child: Container(
+                                child: Text(data[index]["updated_at"]))),
                         SizedBox(
-                          width: 15,
+                          width: 10,
                         ),
-                        Text(data[index]["nama_subjek_pajak"]),
+                        Container(child: Text(data[index]["nop_asal"])),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.green,
+                            ),
+                            onPressed: () {}),
+                        IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {})
                       ],
                     ),
                   ),
@@ -83,11 +114,7 @@ class HomePageState extends State<TruejukanPage> {
               );
             },
           ),
-        )
-        // }
-        //   return Center(child: CircularProgressIndicator());
-        // }),
-        );
+        ));
   }
 
   void _handleSearchStart() {

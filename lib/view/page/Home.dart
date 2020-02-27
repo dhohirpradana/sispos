@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/option_desa.dart';
 import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
+import 'package:sispos_pajak/view/page/perekamansaya.dart';
 import 'package:sispos_pajak/view/page/rujukan.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
 
@@ -18,6 +19,7 @@ class _RumahPageState extends State<RumahPage> {
   @override
   void initState() {
     super.initState();
+    getPref();
   }
 
   Color color1 = Color(0xffdaf8e3);
@@ -32,20 +34,21 @@ class _RumahPageState extends State<RumahPage> {
     });
   }
 
-  String nip = "", name = "", namanya = "", token = "", level = "";
+  String id = "",nip = "", name = "", namanya = "", token = "", level = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       level = preferences.getString("level");
       nip = preferences.getString("nip");
       name = preferences.getString("name");
+      id = preferences.getString("id");
       // token = preferences.getString("token");
     });
     namanya = name.toUpperCase();
     name = (level == "3")
         ? "$namanya(ADMIN)"
         : (level == "2") ? "$namanya(PETUGAS1)" : name = "$namanya(PETUGAS2)";
-    print("nama: $name");
+    print("nama: $name, id: $id");
   }
 
   Color primaryColor = Color(0xff0e2f44);
@@ -179,12 +182,12 @@ class _RumahPageState extends State<RumahPage> {
                                             splashColor:
                                                 color3.withOpacity(0.5),
                                             onTap: () {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //       builder: (context) =>
-                                              //           DesaOption()),
-                                              // );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RekamanSayaPage()),
+                                              );
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(5),

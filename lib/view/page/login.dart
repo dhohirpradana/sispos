@@ -10,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
 import 'package:sispos_pajak/view/page/Home.dart';
-import 'package:sispos_pajak/view/page/home_screen.dart';
 import 'package:sispos_pajak/view/widget/bezier_container.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     print(value);
     print(_loginStatus);
-    print(id);
+    print("id : $id");
     print(name);
     setState(() {
       value = preferences.getInt("value");
@@ -77,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      print("$nip, $pass");
+      // savePref(value, id, nip, name, level, token);
+      print("uid : $id, $nip, $pass");
       login();
     }
     // }
@@ -155,6 +155,7 @@ class _LoginPageState extends State<LoginPage> {
       if (value == 1) {
         setState(() {
           savePref(value, id, nip, name, level, token);
+          print("id user : $id");
           _loginStatus = LoginStatus.signIn;
         });
         Navigator.pop(context);
@@ -162,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
         if (level == "1" || level == "2" || level == "3") {
           print("value : $value");
           print(nip);
-          // print(pass);
+          print("id : $id");
           print(name);
           print(level);
           print(token);
