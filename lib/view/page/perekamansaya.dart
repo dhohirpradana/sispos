@@ -22,6 +22,7 @@ class HomePageState extends State<RekamanSayaPage> {
     print("id: $idpref");
   }
 
+  int spopid;
   List data;
   Future<String> getData() async {
     var response = await http.post(Uri.encodeFull(BaseUrl.rekamsaya),
@@ -29,8 +30,18 @@ class HomePageState extends State<RekamanSayaPage> {
     print("uid : $idpref");
     this.setState(() {
       data = jsonDecode(response.body);
+      // spopid = data['id'];
     });
     return "Success!";
+  }
+
+  deleteRekam() async {
+    var response = await http.post(Uri.encodeFull(BaseUrl.deleterekam),
+        body: {'spops_id': spopid}, headers: {"Accept": "application/json"});
+    // print("uid : $idpref");
+    this.setState(() {
+      data = jsonDecode(response.body);
+    });
   }
 
   @override
@@ -73,7 +84,7 @@ class HomePageState extends State<RekamanSayaPage> {
         body: Material(
           child: ListView.builder(
             itemCount:
-                data == null ? 0 : (data.length > 505) ? 500 : data.length,
+                data == null ? 0 : data.length,
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: InkWell(
@@ -92,6 +103,7 @@ class HomePageState extends State<RekamanSayaPage> {
                           width: 10,
                         ),
                         Container(child: Text(data[index]["nop_asal"])),
+                        // Container(child: Text(spopid.toString())),
                         SizedBox(
                           width: 5,
                         ),
@@ -130,7 +142,7 @@ class HomePageState extends State<RekamanSayaPage> {
         color: Colors.white,
       );
       this.appBarTitle = Text(
-        "DATA RUJUKAN",
+        "PENGAJUAN SAYA",
         style: TextStyle(color: Colors.white),
       );
       _IsSearching = false;

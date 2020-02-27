@@ -44,7 +44,7 @@ class _RumahPageState extends State<RumahPage> {
       id = preferences.getString("id");
       // token = preferences.getString("token");
     });
-    namanya = name.toUpperCase();
+    namanya = name;
     name = (level == "3")
         ? "$namanya(ADMIN)"
         : (level == "2") ? "$namanya(PETUGAS1)" : name = "$namanya(PETUGAS2)";

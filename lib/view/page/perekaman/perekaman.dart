@@ -1332,7 +1332,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
       "tanahluas": tanahLuas.toString(),
-      "tanahlenis": _tanah.toString()
+      "tanahjenis": _tanah.toString()
     });
     print(nopAsal.toString());
     print(objekNamajalan.toString());
