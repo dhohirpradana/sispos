@@ -27,12 +27,6 @@ class _LoginPageState extends State<LoginPage> {
     getPref();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // _timer.cancel();
-  }
-
   final FocusNode _nipFocus = FocusNode();
   final FocusNode _passFocus = FocusNode();
 
@@ -162,6 +156,7 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           savePref(value, id, nip, name, level, token);
           print("id user : $id");
+          print("andjwt : $token");
           _loginStatus = LoginStatus.signIn;
         });
         Navigator.pop(context);
@@ -172,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
           print("id : $id");
           print(name);
           print(level);
-          print(token);
           setState(() {
             validationText = "";
             internetStatusText = "";

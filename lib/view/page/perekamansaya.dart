@@ -12,21 +12,28 @@ class RekamanSayaPage extends StatefulWidget {
 }
 
 class HomePageState extends State<RekamanSayaPage> {
-  String idpref;
+  String idpref, nip, andjwt = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       idpref = preferences.getString("id");
+      nip = preferences.getString("nip");
+      andjwt = preferences.getString("token");
       // token = preferences.getString("token");
     });
-    print("id: $idpref");
+    print("id: $idpref, andjwt : $andjwt");
   }
 
   int spopid;
   List data;
   Future<String> getData() async {
-    var response = await http.post(Uri.encodeFull(BaseUrl.rekamsaya),
-        body: {'user_id': idpref}, headers: {"Accept": "application/json"});
+    var response = await http.post(Uri.encodeFull(BaseUrl.rekamsaya), body: {
+      'user_id': idpref,
+      'nip': nip.toString(),
+      'andjwt': andjwt.toString()
+    }, headers: {
+      "Accept": "application/json"
+    });
     print("uid : $idpref");
     this.setState(() {
       data = jsonDecode(response.body);
@@ -54,12 +61,6 @@ class HomePageState extends State<RekamanSayaPage> {
     });
     _IsSearching = false;
     cariData = "";
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // _timer.cancel();
   }
 
   Color primaryColor = Color(0xff0e2f44);
@@ -104,9 +105,16 @@ class HomePageState extends State<RekamanSayaPage> {
                             child: Container(
                                 child: Text(data[index]["updated_at"]))),
                         SizedBox(
-                          width: 20,
+                          width: 10,
                         ),
-                        Container(child: Text(data[index]["nop_asal"])),
+                        Container(child: Text(data[index]["nama"])),
+                        Text(" ( "),
+                        Container(child: Text(data[index]["desa"])),
+                        Text(" ) "),
+                        // SizedBox(
+                        //   width: 20,
+                        // ),
+                        // // Container(child: Text(data[index]["nama_subjek"])),
                         // Container(child: Text(spopid.toString())),
                         // SizedBox(
                         //   width: 5,

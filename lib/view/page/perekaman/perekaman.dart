@@ -7,9 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
-import 'package:sispos_pajak/api/option_desa.dart';
-import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -22,22 +19,19 @@ class _PerekamanPageState extends State<PerekamanPage> {
     super.initState();
     getSWData();
     getPref();
+    print("Jenis Tanah: $_tanah");
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // _timer.cancel();
-  }
-
-  String idpref;
+  String idpref, andjwt, nip;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       idpref = preferences.getString("id");
+      nip = preferences.getString("nip");
+      andjwt = preferences.getString("token");
       // token = preferences.getString("token");
     });
-    print("id: $idpref");
+    print("id: $idpref,nip: $nip, andjwt: $andjwt");
   }
 
   Color primaryColor = Color(0xff0e2f44);
@@ -161,7 +155,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   int _bangunanke = 0;
   int _kerja = 1;
   int _status = 1;
-  int _tanah = 1;
+  int _tanah = 2;
   int _bangunanPenggunaan = 1;
   int _bangunanKondisi = 1;
   int _bangunanKonstruksi = 1;
@@ -169,6 +163,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
   int _bangunanDinding = 1;
   int _bangunanLantai = 1;
   int _bangunanLangit = 1;
+
+  int _istanahbangunan = 0;
 
   void _statusSubjek() {
     setState(() {
@@ -187,7 +183,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   void _jenisTanah() {
     setState(() {
       _tanah = _value2 + 1;
-      print(_kerja);
+      print(_tanah);
     });
   }
 
@@ -356,7 +352,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                             context, _nopAsalFocus, _objekNamaJalanFocus);
                       },
                       validator: (e) {
-                        if (e.length < 24) {
+                        if (e.length > 0 && e.length < 24) {
                           return "Masukan 24 karakter NOP";
                         }
                       },
@@ -873,7 +869,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
                         BlacklistingTextInputFormatter(
-                            RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                            RegExp("[/`~!@#%^&=+*()?<>{[}]")),
                       ],
                       keyboardType: TextInputType.text,
                       // validator: (e) {
@@ -1226,6 +1222,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                           setState(() {
                             _bangunanke = selected ? 1 : _bangunanke;
                             print("bangunan ke : $_bangunanke");
+                            _istanahbangunan = 1;
                             _value2 = selected ? 0 : 0;
                             _jenisTanah();
                           });
@@ -1244,6 +1241,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                           setState(() {
                             _bangunanke = selected ? 0 : 0;
                             print("bangunan ke : $_bangunanke");
+                            _istanahbangunan = 0;
                             _value2 = selected ? 1 : 1;
                             _jenisTanah();
                           });
@@ -1262,6 +1260,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                           setState(() {
                             _bangunanke = selected ? 0 : 0;
                             print("bangunan ke : $_bangunanke");
+                            _istanahbangunan = 0;
                             _value2 = selected ? 2 : 2;
                             _jenisTanah();
                           });
@@ -1338,7 +1337,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
       "tanahluas": tanahLuas.toString(),
-      "tanahjenis": _tanah.toString(),
+      "tanahjenis": _value2.toString(),
       "bangunanluas": bangunanLuas.toString(),
       "bangunanbangun": bangunanTahunBangun.toString(),
       "bangunanrenov": bangunanTahunRenov.toString(),
@@ -1351,7 +1350,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "bangunanatap": _bangunanAtap.toString(),
       "bangunandinding": _bangunanDinding.toString(),
       "bangunanlantai": _bangunanLantai.toString(),
-      "bangunanlangit": _bangunanLangit.toString()
+      "bangunanlangit": _bangunanLangit.toString(),
+      "andjwt": andjwt.toString()
     });
     // print(nopAsal.toString());
     // print(objekNamajalan.toString());
@@ -1371,15 +1371,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
     // print(subjekKtp.toString());
     // print(formattedDate.toString());
     // print(_tanahLuas.toString());
-    // print(_tanah.toString());
 
     final data = jsonDecode(response.body);
 
     new Future.delayed(new Duration(milliseconds: 0), () async {
       int value = data['value'];
       String msg = data['pesan'];
+      String tanahapi = data['tanahjenis'];
       print(value);
       print(msg);
+      print(tanahapi);
       if (value == 1) {
         Fluttertoast.showToast(
             msg: "Data BERHASIL diunggah",
@@ -1731,11 +1732,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                               RegExp("[0123456789\\.]")),
                         ],
                         keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Luas bangunan wajib diisi";
+                          }
+                        },
                         focusNode: _bangunanLuas,
                         onFieldSubmitted: (term) {
                           _fieldFocusChange(
@@ -1781,11 +1782,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                               RegExp("[0123456789\\.]")),
                         ],
                         keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Jumlah lantai wajib diisi";
+                          }
+                        },
                         focusNode: _bangunanLantaiJumlah,
                         onFieldSubmitted: (term) {
                           _fieldFocusChange(context, _bangunanLantaiJumlah,
@@ -1831,11 +1832,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                               RegExp("[0123456789\\.]")),
                         ],
                         keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Tahun dibangun wajib diisi";
+                          }
+                        },
                         focusNode: _bangunanTahunBangun,
                         onFieldSubmitted: (term) {
                           _fieldFocusChange(context, _bangunanTahunBangun,
@@ -1931,11 +1932,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                               RegExp("[0123456789\\.]")),
                         ],
                         keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Jumlah bangunan wajib diisi";
+                          }
+                        },
                         focusNode: _bangunanJumlah,
                         onFieldSubmitted: (term) {
                           _fieldFocusChange(
@@ -1981,11 +1982,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                               RegExp("[0123456789\\.]")),
                         ],
                         keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Daya listrik terpasang wajib diisi";
+                          }
+                        },
                         focusNode: _bangunanListrikDaya,
                         onFieldSubmitted: (term) {
                           _bangunanListrikDaya.unfocus();

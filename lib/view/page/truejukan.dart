@@ -13,10 +13,8 @@ class TruejukanPage extends StatefulWidget {
 class HomePageState extends State<TruejukanPage> {
   List data;
   Future<String> getData() async {
-    var response = await http.post(
-        Uri.encodeFull(BaseUrl.lihat),
-        body: {'namaCari': cariData},
-        headers: {"Accept": "application/json"});
+    var response = await http.post(Uri.encodeFull(BaseUrl.lihat),
+        body: {'namaCari': cariData}, headers: {"Accept": "application/json"});
     print(cariData);
     this.setState(() {
       data = jsonDecode(response.body);
@@ -77,6 +75,11 @@ class HomePageState extends State<TruejukanPage> {
                         EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),
                     child: Row(
                       children: <Widget>[
+                        Text((index + 1).toString()),
+                        SizedBox(
+                          width: 10,
+                          child: Text("."),
+                        ),
                         Flexible(child: Text(data[index]["nop"])),
                         SizedBox(
                           width: 15,

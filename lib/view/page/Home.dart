@@ -22,12 +22,6 @@ class _RumahPageState extends State<RumahPage> {
     getPref();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    // _timer.cancel();
-  }
-
   Color color1 = Color(0xffdaf8e3);
   Color color2 = Color(0xff97ebdb);
   Color color3 = Color(0xff00c2c7);
@@ -40,7 +34,7 @@ class _RumahPageState extends State<RumahPage> {
     });
   }
 
-  String id = "",nip = "", name = "", namanya = "", token = "", level = "";
+  String id = "",nip = "", name = "", namanya = "", token = "", level = "", andjwt = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -48,13 +42,14 @@ class _RumahPageState extends State<RumahPage> {
       nip = preferences.getString("nip");
       name = preferences.getString("name");
       id = preferences.getString("id");
+      andjwt = preferences.getString("token");
       // token = preferences.getString("token");
     });
     namanya = name;
     name = (level == "3")
         ? "$namanya(ADMIN)"
         : (level == "2") ? "$namanya(PETUGAS1)" : name = "$namanya(PETUGAS2)";
-    print("nama: $name, id: $id");
+    print("nama: $name, id: $id, token: $andjwt");
   }
 
   Color primaryColor = Color(0xff0e2f44);
