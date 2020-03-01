@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
+import 'package:image/image.dart' as Img;
+import 'package:async/async.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -351,1040 +358,1359 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Widget _formInputan() {
     return Form(
         key: _key,
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 5, bottom: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "NOP Asal",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "* Kosongkan Jika",
-                        style: TextStyle(fontSize: 14, color: Colors.red),
-                      ),
-                      Text(
-                        " TIDAK ADA ",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                          icon: Icon(
-                            Icons.help,
-                            color: Colors.blue[800],
-                            size: 35,
-                          ),
-                          onPressed: () {
-                            _nopAsalHelp();
-                          })
+        child: Column(children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 5, bottom: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "NOP Asal",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "* Kosongkan Jika",
+                      style: TextStyle(fontSize: 14, color: Colors.red),
+                    ),
+                    Text(
+                      " TIDAK ADA ",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(
+                        icon: Icon(
+                          Icons.help,
+                          color: Colors.blue[800],
+                          size: 35,
+                        ),
+                        onPressed: () {
+                          _nopAsalHelp();
+                        })
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    initialValue: "33.18.010.",
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(24),
+                      WhitelistingTextInputFormatter(RegExp("[0123456789\\.]")),
                     ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      initialValue: "33.18.010.",
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(24),
-                        WhitelistingTextInputFormatter(
-                            RegExp("[0123456789\\.]")),
-                      ],
-                      maxLength: 24,
-                      keyboardType: TextInputType.number,
-                      focusNode: _nopAsalFocus,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(
-                            context, _nopAsalFocus, _objekNamaJalanFocus);
-                      },
-                      validator: (e) {
-                        if (e.length > 0 && e.length < 24) {
-                          return "Masukan 24 karakter NOP";
-                        }
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => nopAsal = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      // controller: nopAsalController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
+                    maxLength: 24,
+                    keyboardType: TextInputType.number,
+                    focusNode: _nopAsalFocus,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(
+                          context, _nopAsalFocus, _objekNamaJalanFocus);
+                    },
+                    validator: (e) {
+                      if (e.length > 0 && e.length < 24) {
+                        return "Masukan 24 karakter NOP";
+                      }
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => nopAsal = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    // controller: nopAsalController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              color: secondColor,
-              child: Text(
-                "DATA OBJEK PAJAK",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            color: secondColor,
+            child: Text(
+              "DATA OBJEK PAJAK",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Nama Jalan",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(30),
-                        BlacklistingTextInputFormatter(
-                            RegExp("[/`~!@#%^&=+*()?<>{[}]")),
-                      ],
-                      keyboardType: TextInputType.text,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "Nama jalan wajib diisi";
-                      //   }
-                      // },
-                      focusNode: _objekNamaJalanFocus,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(
-                            context, _objekNamaJalanFocus, _objekBlok);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => objekNamajalan = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: objekNamaJalanController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Blok / KAV Nomor",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(20),
-                      ],
-                      keyboardType: TextInputType.text,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "Blok / KAV No wajib diisi";
-                      //   }
-                      // },
-                      focusNode: _objekBlok,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _objekBlok, _objekRw);
-                        print(objekBlok);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => objekBlok = e.toUpperCase(),
-                      onChanged: (e) {
-                        if (objekBlokController.text != e.toUpperCase())
-                          objekBlokController.value = objekBlokController.value
-                              .copyWith(text: e.toUpperCase());
-                      },
-                      controller: objekBlokController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Desa",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _DesaOption()
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Nama Jalan",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(30),
+                      BlacklistingTextInputFormatter(
+                          RegExp("[/`~!@#%^&=+*()?<>{[}]")),
                     ],
-                  ),
-                ],
-              ),
+                    keyboardType: TextInputType.text,
+                    // validator: (e) {
+                    //   if (e.isEmpty) {
+                    //     return "Nama jalan wajib diisi";
+                    //   }
+                    // },
+                    focusNode: _objekNamaJalanFocus,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(
+                          context, _objekNamaJalanFocus, _objekBlok);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => objekNamajalan = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: objekNamaJalanController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "RW",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      maxLength: 2,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      validator: (e) {
-                        if (e.isNotEmpty) {
-                          if (e.length < 2) {
-                            return "RW wajib diisi 2 digit nomor";
-                          }
-                        }
-                      },
-                      focusNode: _objekRw,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _objekRw, _objekRt);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => objekRw = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: objekRwController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "RT",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      maxLength: 3,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      validator: (e) {
-                        if (e.isNotEmpty) {
-                          if (e.length < 3) {
-                            return "RT wajib diisi 3 digit nomor";
-                          }
-                        }
-                      },
-                      focusNode: _objekRt,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _objekRt, _subjekNama);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => objekRt = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: objekRtController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              color: secondColor,
-              child: Text(
-                "DATA SUBJEK PAJAK",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 10, top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Status",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 12.0,
-                    children: <Widget>[
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.red[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Pemilik",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value == 0,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value = selected ? 0 : 0;
-                            _statusSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.red[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Penyewa",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value == 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value = selected ? 1 : 1;
-                            _statusSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.red[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Pengelola",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value == 2,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value = selected ? 2 : 2;
-                            _statusSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.red[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Pemakai",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value == 3,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value = selected ? 3 : 3;
-                            _statusSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.red[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Sengketa",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value == 4,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value = selected ? 4 : 4;
-                            _statusSubjek();
-                          });
-                        },
-                      ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Blok / KAV Nomor",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(20),
                     ],
-                  ),
-                ],
-              ),
+                    keyboardType: TextInputType.text,
+                    // validator: (e) {
+                    //   if (e.isEmpty) {
+                    //     return "Blok / KAV No wajib diisi";
+                    //   }
+                    // },
+                    focusNode: _objekBlok,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _objekBlok, _objekRw);
+                      print(objekBlok);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => objekBlok = e.toUpperCase(),
+                    onChanged: (e) {
+                      if (objekBlokController.text != e.toUpperCase())
+                        objekBlokController.value = objekBlokController.value
+                            .copyWith(text: e.toUpperCase());
+                    },
+                    controller: objekBlokController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
             ),
-            Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Pekerjaan",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 12.0,
-                    children: <Widget>[
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.green[600],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "PNS",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value1 == 0,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value1 = selected ? 0 : 0;
-                            _kerjaSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.green[600],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "ABRI",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value1 == 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value1 = selected ? 1 : 1;
-                            _kerjaSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.green[600],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Pensiunan",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value1 == 2,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value1 = selected ? 2 : 2;
-                            _kerjaSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.green[600],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Badan",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value1 == 3,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value1 = selected ? 3 : 3;
-                            _kerjaSubjek();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.green[600],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Lainya",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value1 == 4,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _value1 = selected ? 4 : 4;
-                            _kerjaSubjek();
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Desa",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    _DesaOption()
+                  ],
+                ),
+              ],
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Nama Subjek Pajak",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(20),
-                        BlacklistingTextInputFormatter(
-                            RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                      ],
-                      keyboardType: TextInputType.text,
-                      validator: (e) {
-                        if (e.isEmpty) {
-                          return "Nama subjek pajak wajib diisi";
-                        }
-                      },
-                      focusNode: _subjekNama,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(
-                            context, _subjekNama, _subjekNamaJalan);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekNama = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekNamaController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Nama jalan",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(30),
-                        BlacklistingTextInputFormatter(
-                            RegExp("[/`~!@#%^&=+*()?<>{[}]")),
-                      ],
-                      keyboardType: TextInputType.text,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "Nama jalan wajib diisi";
-                      //   }
-                      // },
-                      focusNode: _subjekNamaJalan,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(
-                            context, _subjekNamaJalan, _subjekKab);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekNamaJalan = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekNamaJalanController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Kabupaten",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(15),
-                        BlacklistingTextInputFormatter(
-                            RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                      ],
-                      keyboardType: TextInputType.text,
-                      validator: (e) {
-                        if (e.isEmpty) {
-                          return "Kabupaten wajib diisi";
-                        }
-                      },
-                      focusNode: _subjekKab,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekKab, _subjekDesa);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekKab = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekKabController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Desa",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(30),
-                        BlacklistingTextInputFormatter(
-                            RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                      ],
-                      keyboardType: TextInputType.text,
-                      validator: (e) {
-                        if (e.isEmpty) {
-                          return "Desa wajib diisi";
-                        }
-                      },
-                      focusNode: _subjekDesa,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekDesa, _subjekRw);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekDesa = e,
-                      onChanged: (e) {
-                        setState(() {
-                          e.toString().toUpperCase();
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekDesaController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "RW",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "RW",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
                     maxLength: 2,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      validator: (e) {
-                        if (e.isNotEmpty) {
-                          if (e.length < 2) {
-                            return "RW wajib diisi 2 digit nomor";
-                          }
-                        }
-                      },
-                      focusNode: _subjekRw,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekRw, _subjekRt);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekRw = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekRwController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "RT",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    maxLength: 3,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      validator: (e) {
-                        if (e.isNotEmpty) {
-                          if (e.length < 3) {
-                            return "RT wajib diisi 3 digit nomor";
-                          }
-                        }
-                      },
-                      focusNode: _subjekRt,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekRt, _subjekKtp);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekRt = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekRtController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "No HP/ Telp",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    maxLength: 29,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "No HP wajib diisi";
-                      //     // } else if (e.length < 16) {
-                      //     //   return "No HP wajib diisi";
-                      //   }
-                      // },
-                      focusNode: _subjekTelp,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekTelp, _subjekKtp);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekTelp = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekTelpController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "No KTP",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    maxLength: 16,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      validator: (e) {
-                        if (e.isEmpty) {
-                          return "No KTP wajib diisi";
-                        } else if (e.length < 16) {
-                          return "No KTP wajib diisi 16 digit";
-                        }
-                      },
-                      focusNode: _subjekKtp,
-                      onFieldSubmitted: (term) {
-                        _fieldFocusChange(context, _subjekKtp, _tanahLuas);
-                      },
-                      textInputAction: TextInputAction.next,
-                      onSaved: (e) => subjekKtp = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: subjekKtpController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              // margin: EdgeInsets.only(bottom: 15),
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              color: secondColor,
-              child: Text(
-                "DATA TANAH",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Luas Tanah",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                      keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "No KTP wajib diisi";
-                      //   }
-                      // },
-                      focusNode: _tanahLuas,
-                      onFieldSubmitted: (term) {
-                        _tanahLuas.unfocus();
-                      },
-                      textInputAction: TextInputAction.done,
-                      onSaved: (e) => tanahLuas = e,
-                      onChanged: (e) {
-                        setState(() {
-                          // validationText = "";
-                        });
-                      },
-                      controller: tanahLuasController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 3.0),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          fillColor: Colors.white,
-                          filled: true))
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 19, top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Jenis Tanah",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 12.0,
-                    children: <Widget>[
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.purple[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Tanah + Bangunan",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value2 == 0,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _bangunanke = selected ? 1 : _bangunanke;
-                            print("bangunan ke : $_bangunanke");
-                            _istanahbangunan = 1;
-                            _value2 = 0;
-                            _jenisTanah();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.purple[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Kavling",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value2 == 1,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _bangunanke = selected ? 0 : 0;
-                            print("bangunan ke : $_bangunanke");
-                            _istanahbangunan = 0;
-                            _value2 = 1;
-                            _jenisTanah();
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        pressElevation: 0.0,
-                        selectedColor: Colors.purple[500],
-                        backgroundColor: Colors.blue[500],
-                        label: Text(
-                          "Tanah Kosong",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        selected: _value2 == 2,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _bangunanke = selected ? 0 : 0;
-                            print("bangunan ke : $_bangunanke");
-                            _istanahbangunan = 0;
-                            _value2 = 2;
-                            _jenisTanah();
-                          });
-                        },
-                      ),
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
                     ],
-                  ),
-                ],
-              ),
+                    keyboardType: TextInputType.number,
+                    validator: (e) {
+                      if (e.isNotEmpty) {
+                        if (e.length < 2) {
+                          return "RW wajib diisi 2 digit nomor";
+                        }
+                      }
+                    },
+                    focusNode: _objekRw,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _objekRw, _objekRt);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => objekRw = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: objekRwController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
             ),
-            (_value2 == 0) ? _rincianBangunan() : SizedBox(),
-          ],
-        ));
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "RT",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    maxLength: 3,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    validator: (e) {
+                      if (e.isNotEmpty) {
+                        if (e.length < 3) {
+                          return "RT wajib diisi 3 digit nomor";
+                        }
+                      }
+                    },
+                    focusNode: _objekRt,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _objekRt, _subjekNama);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => objekRt = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: objekRtController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            color: secondColor,
+            child: Text(
+              "DATA SUBJEK PAJAK",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(bottom: 10, top: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Status",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 12.0,
+                  children: <Widget>[
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.red[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Pemilik",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value == 0,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? 0 : 0;
+                          _statusSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.red[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Penyewa",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value == 1,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? 1 : 1;
+                          _statusSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.red[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Pengelola",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value == 2,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? 2 : 2;
+                          _statusSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.red[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Pemakai",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value == 3,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? 3 : 3;
+                          _statusSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.red[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Sengketa",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value == 4,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value = selected ? 4 : 4;
+                          _statusSubjek();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Pekerjaan",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 12.0,
+                  children: <Widget>[
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.green[600],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "PNS",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value1 == 0,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value1 = selected ? 0 : 0;
+                          _kerjaSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.green[600],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "ABRI",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value1 == 1,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value1 = selected ? 1 : 1;
+                          _kerjaSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.green[600],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Pensiunan",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value1 == 2,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value1 = selected ? 2 : 2;
+                          _kerjaSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.green[600],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Badan",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value1 == 3,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value1 = selected ? 3 : 3;
+                          _kerjaSubjek();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.green[600],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Lainya",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value1 == 4,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _value1 = selected ? 4 : 4;
+                          _kerjaSubjek();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Nama Subjek Pajak",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(20),
+                      BlacklistingTextInputFormatter(
+                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                    ],
+                    keyboardType: TextInputType.text,
+                    validator: (e) {
+                      if (e.isEmpty) {
+                        return "Nama subjek pajak wajib diisi";
+                      }
+                    },
+                    focusNode: _subjekNama,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekNama, _subjekNamaJalan);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekNama = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekNamaController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Nama jalan",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(30),
+                      BlacklistingTextInputFormatter(
+                          RegExp("[/`~!@#%^&=+*()?<>{[}]")),
+                    ],
+                    keyboardType: TextInputType.text,
+                    // validator: (e) {
+                    //   if (e.isEmpty) {
+                    //     return "Nama jalan wajib diisi";
+                    //   }
+                    // },
+                    focusNode: _subjekNamaJalan,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekNamaJalan, _subjekKab);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekNamaJalan = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekNamaJalanController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Kabupaten",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(15),
+                      BlacklistingTextInputFormatter(
+                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                    ],
+                    keyboardType: TextInputType.text,
+                    validator: (e) {
+                      if (e.isEmpty) {
+                        return "Kabupaten wajib diisi";
+                      }
+                    },
+                    focusNode: _subjekKab,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekKab, _subjekDesa);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekKab = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekKabController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Desa",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(30),
+                      BlacklistingTextInputFormatter(
+                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                    ],
+                    keyboardType: TextInputType.text,
+                    validator: (e) {
+                      if (e.isEmpty) {
+                        return "Desa wajib diisi";
+                      }
+                    },
+                    focusNode: _subjekDesa,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekDesa, _subjekRw);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekDesa = e,
+                    onChanged: (e) {
+                      setState(() {
+                        e.toString().toUpperCase();
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekDesaController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "RW",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    maxLength: 2,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    validator: (e) {
+                      if (e.isNotEmpty) {
+                        if (e.length < 2) {
+                          return "RW wajib diisi 2 digit nomor";
+                        }
+                      }
+                    },
+                    focusNode: _subjekRw,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekRw, _subjekRt);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekRw = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekRwController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "RT",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    maxLength: 3,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    validator: (e) {
+                      if (e.isNotEmpty) {
+                        if (e.length < 3) {
+                          return "RT wajib diisi 3 digit nomor";
+                        }
+                      }
+                    },
+                    focusNode: _subjekRt,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekRt, _subjekKtp);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekRt = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekRtController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "No HP/ Telp",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    // maxLength: 29,
+                    inputFormatters: <TextInputFormatter>[
+                      LengthLimitingTextInputFormatter(16),
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    // validator: (e) {
+                    //   if (e.isEmpty) {
+                    //     return "No HP wajib diisi";
+                    //     // } else if (e.length < 16) {
+                    //     //   return "No HP wajib diisi";
+                    //   }
+                    // },
+                    focusNode: _subjekTelp,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekTelp, _subjekKtp);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekTelp = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekTelpController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "No KTP",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    maxLength: 16,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    validator: (e) {
+                      if (e.isEmpty) {
+                        return "No KTP wajib diisi";
+                      } else if (e.length < 16) {
+                        return "No KTP wajib diisi 16 digit";
+                      }
+                    },
+                    focusNode: _subjekKtp,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, _subjekKtp, _tanahLuas);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onSaved: (e) => subjekKtp = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: subjekKtpController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            // margin: EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            color: secondColor,
+            child: Text(
+              "DATA TANAH",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Luas Tanah",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    // validator: (e) {
+                    //   if (e.isEmpty) {
+                    //     return "No KTP wajib diisi";
+                    //   }
+                    // },
+                    focusNode: _tanahLuas,
+                    onFieldSubmitted: (term) {
+                      _tanahLuas.unfocus();
+                    },
+                    textInputAction: TextInputAction.done,
+                    onSaved: (e) => tanahLuas = e,
+                    onChanged: (e) {
+                      setState(() {
+                        // validationText = "";
+                      });
+                    },
+                    controller: tanahLuasController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 3.0),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        fillColor: Colors.white,
+                        filled: true))
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(bottom: 19, top: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Jenis Tanah",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 12.0,
+                  children: <Widget>[
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.purple[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Tanah + Bangunan",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value2 == 0,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _bangunanke = selected ? 1 : _bangunanke;
+                          print("bangunan ke : $_bangunanke");
+                          _istanahbangunan = 1;
+                          _value2 = 0;
+                          _jenisTanah();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.purple[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Kavling",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value2 == 1,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _bangunanke = selected ? 0 : 0;
+                          print("bangunan ke : $_bangunanke");
+                          _istanahbangunan = 0;
+                          _value2 = 1;
+                          _jenisTanah();
+                        });
+                      },
+                    ),
+                    ChoiceChip(
+                      pressElevation: 0.0,
+                      selectedColor: Colors.purple[500],
+                      backgroundColor: Colors.blue[500],
+                      label: Text(
+                        "Tanah Kosong",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      selected: _value2 == 2,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _bangunanke = selected ? 0 : 0;
+                          print("bangunan ke : $_bangunanke");
+                          _istanahbangunan = 0;
+                          _value2 = 2;
+                          _jenisTanah();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          (_value2 == 0) ? _rincianBangunan() : SizedBox(),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Upload Foto Sertipikat",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(bottom: 2.5),
+                          child: Material(
+                            elevation: 3,
+                            borderRadius: BorderRadius.circular(7),
+                            color: Colors.grey.withOpacity(0.4),
+                            child: IconButton(
+                              icon: Icon(Icons.image),
+                              onPressed: getImageGallery,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 2.5),
+                          child: Material(
+                            elevation: 3,
+                            borderRadius: BorderRadius.circular(7),
+                            color: Colors.grey.withOpacity(0.4),
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt),
+                              onPressed: getImageCamera,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Center(
+                      child: _image == null
+                          ? Container(
+                              padding: EdgeInsets.only(
+                                  top: 43, bottom: 43, left: 35, right: 35),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  color: Colors.grey.withOpacity(0.4)),
+                              child: Text("Tidak ada gambar yang dipilih"),
+                            )
+                          : Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      top: 3, bottom: 3, left: 80, right: 80),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      color: Colors.grey.withOpacity(0.4)),
+                                  child: Material(
+                                    elevation: 3,
+                                    child: Image.file(
+                                      _image,
+                                      height: 100,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Container(
+          //   margin: EdgeInsets.only(bottom: 10),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: <Widget>[
+          //       Text(
+          //         "Upload Foto SPPT",
+          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          //       ),
+          //       SizedBox(
+          //         height: 10,
+          //       ),
+          //       Row(
+          //         children: <Widget>[
+          //           Column(
+          //             children: <Widget>[
+          //               Container(
+          //                 margin: EdgeInsets.only(bottom: 2.5),
+          //                 child: Material(
+          //                   elevation: 3,
+          //                   borderRadius: BorderRadius.circular(7),
+          //                   color: Colors.grey.withOpacity(0.4),
+          //                   child: IconButton(
+          //                     icon: Icon(Icons.image),
+          //                     onPressed: getImageGallery,
+          //                   ),
+          //                 ),
+          //               ),
+          //               Container(
+          //                 margin: EdgeInsets.only(top: 2.5),
+          //                 child: Material(
+          //                   elevation: 3,
+          //                   borderRadius: BorderRadius.circular(7),
+          //                   color: Colors.grey.withOpacity(0.4),
+          //                   child: IconButton(
+          //                     icon: Icon(Icons.camera_alt),
+          //                     onPressed: getImageCamera,
+          //                   ),
+          //                 ),
+          //               )
+          //             ],
+          //           ),
+          //           SizedBox(
+          //             width: 5,
+          //           ),
+          //           Center(
+          //             child: _image == null
+          //                 ? Container(
+          //                     padding: EdgeInsets.only(
+          //                         top: 43, bottom: 43, left: 35, right: 35),
+          //                     decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(7),
+          //                         color: Colors.grey.withOpacity(0.4)),
+          //                     child: Text("Tidak ada gambar yang dipilih"),
+          //                   )
+          //                 : Column(
+          //                     children: <Widget>[
+          //                       Container(
+          //                         padding: EdgeInsets.only(
+          //                             top: 3, bottom: 3, left: 80, right: 80),
+          //                         decoration: BoxDecoration(
+          //                             borderRadius: BorderRadius.circular(7),
+          //                             color: Colors.grey.withOpacity(0.4)),
+          //                         child: Material(
+          //                           elevation: 3,
+          //                           child: Image.file(
+          //                             _image,
+          //                             height: 100,
+          //                             fit: BoxFit.fill,
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Container(
+          //   margin: EdgeInsets.only(bottom: 10),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: <Widget>[
+          //       Text(
+          //         "Upload Foto KTP",
+          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          //       ),
+          //       SizedBox(
+          //         height: 10,
+          //       ),
+          //       Row(
+          //         children: <Widget>[
+          //           Column(
+          //             children: <Widget>[
+          //               Container(
+          //                 margin: EdgeInsets.only(bottom: 2.5),
+          //                 child: Material(
+          //                   elevation: 3,
+          //                   borderRadius: BorderRadius.circular(7),
+          //                   color: Colors.grey.withOpacity(0.4),
+          //                   child: IconButton(
+          //                     icon: Icon(Icons.image),
+          //                     onPressed: getImageGallery,
+          //                   ),
+          //                 ),
+          //               ),
+          //               Container(
+          //                 margin: EdgeInsets.only(top: 2.5),
+          //                 child: Material(
+          //                   elevation: 3,
+          //                   borderRadius: BorderRadius.circular(7),
+          //                   color: Colors.grey.withOpacity(0.4),
+          //                   child: IconButton(
+          //                     icon: Icon(Icons.camera_alt),
+          //                     onPressed: getImageCamera,
+          //                   ),
+          //                 ),
+          //               )
+          //             ],
+          //           ),
+          //           SizedBox(
+          //             width: 5,
+          //           ),
+          //           Center(
+          //             child: _image == null
+          //                 ? Container(
+          //                     padding: EdgeInsets.only(
+          //                         top: 43, bottom: 43, left: 35, right: 35),
+          //                     decoration: BoxDecoration(
+          //                         borderRadius: BorderRadius.circular(7),
+          //                         color: Colors.grey.withOpacity(0.4)),
+          //                     child: Text("Tidak ada gambar yang dipilih"),
+          //                   )
+          //                 : Column(
+          //                     children: <Widget>[
+          //                       Container(
+          //                         padding: EdgeInsets.only(
+          //                             top: 3, bottom: 3, left: 80, right: 80),
+          //                         decoration: BoxDecoration(
+          //                             borderRadius: BorderRadius.circular(7),
+          //                             color: Colors.grey.withOpacity(0.4)),
+          //                         child: Material(
+          //                           elevation: 3,
+          //                           child: Image.file(
+          //                             _image,
+          //                             height: 100,
+          //                             fit: BoxFit.fill,
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // )
+        ]));
+  }
+
+  File _image;
+  Future getImageGallery() async {
+    Random rand = new Random();
+    int random = rand.nextInt(1000000) + 1000;
+
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    final title = random.toString();
+
+    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
+    Img.Image smallerImg = Img.copyResize(image, width: 1000);
+
+    var compressImage = await File("$path/FromGallery_$title.jpg")
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+
+    setState(() {
+      _image = compressImage;
+    });
+  }
+
+  Future getImageCamera() async {
+    Random rand = new Random();
+    int random = rand.nextInt(1000000) + 1000;
+
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    final title = random.toString();
+
+    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
+    Img.Image smallerImg = Img.copyResize(image, width: 1000);
+
+    var compressImage = await File("$path/FromCamera_$title.jpg")
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+
+    setState(() {
+      _image = compressImage;
+    });
+  }
+
+  Future simpanFoto(File imageFile) async {
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var uri = Uri.parse(BaseUrl.rekamfoto);
+    var request = new http.MultipartRequest("POST", uri);
+
+    var multipartFile = new http.MultipartFile("foto", stream, length,
+        filename: path.basename(imageFile.path));
+    request.files.add(multipartFile);
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (BuildContext context) {
+    //     return Dialog(
+    //       child: new Row(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Container(
+    //               margin: EdgeInsets.all(5),
+    //               child: new CircularProgressIndicator()),
+    //           new Text(""),
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      setState(() {
+        _image = null;
+      });
+      print("Berhasil upload foto");
+    } else {
+      print("Gagal upload foto");
+    }
   }
 
   _fieldFocusChange(
@@ -1399,6 +1725,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     if (form.validate()) {
       form.save();
       simpan();
+      simpanFoto(_image);
       (_value2 == 0) ? simpanbangunan() : () {};
     } else {
       FocusScope.of(context).requestFocus(_nopAsalFocus);
@@ -1504,6 +1831,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
             fontSize: 16.0);
         setState(() {});
         print("Data GAGAL diunggah");
+      } else if (value == 2) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+            msg: "Data NOP asal tidak ditemukan",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red.withOpacity(0.5),
+            textColor: Colors.white,
+            fontSize: 16.0);
+        setState(() {});
+        print("Data NOP asal tidak ditemukan");
       }
       // }
     });
@@ -1521,7 +1860,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "bangunanrenov": bangunanTahunRenov.toString(),
       "bangunanjumlahlantai": bangunanLantaiJumlah.toString(),
       "bangunandaya": bangunanListrikDaya.toString(),
-      "bangunanjumlah": bangunanJumlah.toString(),
+      // "bangunanjumlah": bangunanJumlah.toString(),
       "bangunanpenggunaan": _bangunanPenggunaan.toString(),
       "bangunankondisi": _bangunanKondisi.toString(),
       "bangunankonstruksi": _bangunanKonstruksi.toString(),
@@ -1981,8 +2320,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
+                        maxLength: 4,
                         inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(4),
                           WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
@@ -2029,8 +2368,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
+                        maxLength: 4,
                         inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(4),
                           WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
@@ -2063,54 +2402,54 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Jumlah Bangunan",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(10),
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (e) {
-                          if (e.isEmpty) {
-                            return "Jumlah bangunan wajib diisi";
-                          }
-                        },
-                        focusNode: _bangunanJumlah,
-                        onFieldSubmitted: (term) {
-                          _fieldFocusChange(
-                              context, _bangunanJumlah, _bangunanListrikDaya);
-                        },
-                        textInputAction: TextInputAction.next,
-                        onSaved: (e) => bangunanJumlah = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanJumlahController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
+              // Container(
+              //   margin: EdgeInsets.symmetric(vertical: 10),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: <Widget>[
+              //       Text(
+              //         "Jumlah Bangunan",
+              //         style:
+              //             TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              //       ),
+              //       SizedBox(
+              //         height: 10,
+              //       ),
+              //       TextFormField(
+              //           inputFormatters: <TextInputFormatter>[
+              //             LengthLimitingTextInputFormatter(10),
+              //             WhitelistingTextInputFormatter.digitsOnly
+              //           ],
+              //           keyboardType: TextInputType.number,
+              //           validator: (e) {
+              //             if (e.isEmpty) {
+              //               return "Jumlah bangunan wajib diisi";
+              //             }
+              //           },
+              //           focusNode: _bangunanJumlah,
+              //           onFieldSubmitted: (term) {
+              //             _fieldFocusChange(
+              //                 context, _bangunanJumlah, _bangunanListrikDaya);
+              //           },
+              //           textInputAction: TextInputAction.next,
+              //           onSaved: (e) => bangunanJumlah = e,
+              //           onChanged: (e) {
+              //             setState(() {
+              //               // validationText = "";
+              //             });
+              //           },
+              //           controller: bangunanJumlahController,
+              //           obscureText: false,
+              //           decoration: InputDecoration(
+              //               border: UnderlineInputBorder(
+              //                   borderSide:
+              //                       BorderSide(color: Colors.grey, width: 3.0),
+              //                   borderRadius: BorderRadius.circular(5.0)),
+              //               fillColor: Colors.white,
+              //               filled: true))
+              //     ],
+              //   ),
+              // ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: Column(
