@@ -351,6 +351,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 TextFormField(
+                    enableInteractiveSelection: false,
                     validator: (e) {
                       if (e.isEmpty) {
                         return "Password tidak boleh kosong";

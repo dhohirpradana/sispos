@@ -88,6 +88,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   final FocusNode _subjekDesa = FocusNode();
   final FocusNode _subjekRw = FocusNode();
   final FocusNode _subjekRt = FocusNode();
+  final FocusNode _subjekTelp = FocusNode();
   final FocusNode _subjekKtp = FocusNode();
   final FocusNode _tanahLuas = FocusNode();
   final FocusNode _bangunanLuas = FocusNode();
@@ -110,6 +111,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   final subjekDesaController = TextEditingController();
   final subjekRwController = TextEditingController();
   final subjekRtController = TextEditingController();
+  final subjekTelpController = TextEditingController();
   final subjekKtpController = TextEditingController();
   final tanahLuasController = TextEditingController();
   final bangunanLuasController = TextEditingController();
@@ -133,6 +135,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   String subjekRw;
   String subjekRt;
   String subjekKtp;
+  String subjekTelp;
   String tanahLuas;
   String bangunanLuas;
   String bangunanLantaiJumlah;
@@ -247,7 +250,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
             children: <Widget>[
               Icon(
                 Icons.help,
-                color: Colors.blue,
+                color: Colors.blue[900],
                 size: 30,
               ),
               SizedBox(
@@ -290,13 +293,68 @@ class _PerekamanPageState extends State<PerekamanPage> {
     );
   }
 
+  void _tambahBangunanHelp() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Row(
+            children: <Widget>[
+              Icon(
+                Icons.help,
+                color: Colors.blue[900],
+                size: 25,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text("TAMBAH BANGUNAN"),
+            ],
+          ),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                    "Klik tambah bangunan apabila tanah + bangunan memiliki lebih dari 1 bangunan, Apabila tanah + bangunan hanya memiliki 1 bangunan klik tombol simpan."),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                    "Ketika anda mengkonfirmasi tambah bangunan, maka data bangunan yang anda inputkan akan tersimpan, kemudian anda dapat input data bangunan berikutnya."),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                    "Teliti dan pastikan data yang anda inputkan sudah benar sebelum klik tombol tambah bangunan maupun simpan.")
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            //  FlatButton(
+            //     child: Text("Close"),
+            //     onPressed: () {
+            //       Navigator.of(context).pop();
+            //     },
+            //   ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _formInputan() {
     return Form(
         key: _key,
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 15, bottom: 10),
+              margin: EdgeInsets.only(top: 5, bottom: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -321,15 +379,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                             color: Colors.red,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "NOP Asal",
-                        style: TextStyle(fontSize: 14, color: Colors.red),
-                      ),
                       IconButton(
                           icon: Icon(
                             Icons.help,
-                            color: Colors.blue,
-                            size: 22,
+                            color: Colors.blue[800],
+                            size: 35,
                           ),
                           onPressed: () {
                             _nopAsalHelp();
@@ -340,11 +394,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
+                      initialValue: "33.18.010.",
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(24),
                         WhitelistingTextInputFormatter(
                             RegExp("[0123456789\\.]")),
                       ],
+                      maxLength: 24,
                       keyboardType: TextInputType.number,
                       focusNode: _nopAsalFocus,
                       onFieldSubmitted: (term) {
@@ -363,7 +419,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                           // validationText = "";
                         });
                       },
-                      controller: nopAsalController,
+                      // controller: nopAsalController,
                       obscureText: false,
                       decoration: InputDecoration(
                           border: UnderlineInputBorder(
@@ -516,16 +572,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(2),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                      maxLength: 2,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "RW wajib diisi";
-                      //   }
-                      // },
+                      validator: (e) {
+                        if (e.isNotEmpty) {
+                          if (e.length < 2) {
+                            return "RW wajib diisi 2 digit nomor";
+                          }
+                        }
+                      },
                       focusNode: _objekRw,
                       onFieldSubmitted: (term) {
                         _fieldFocusChange(context, _objekRw, _objekRt);
@@ -562,16 +620,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(3),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                      maxLength: 3,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "RT wajib diisi";
-                      //   }
-                      // },
+                      validator: (e) {
+                        if (e.isNotEmpty) {
+                          if (e.length < 3) {
+                            return "RT wajib diisi 3 digit nomor";
+                          }
+                        }
+                      },
                       focusNode: _objekRt,
                       onFieldSubmitted: (term) {
                         _fieldFocusChange(context, _objekRt, _subjekNama);
@@ -1011,16 +1071,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(2),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                    maxLength: 2,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "RW wajib diisi";
-                      //   }
-                      // },
+                      validator: (e) {
+                        if (e.isNotEmpty) {
+                          if (e.length < 2) {
+                            return "RW wajib diisi 2 digit nomor";
+                          }
+                        }
+                      },
                       focusNode: _subjekRw,
                       onFieldSubmitted: (term) {
                         _fieldFocusChange(context, _subjekRw, _subjekRt);
@@ -1057,16 +1119,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(3),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                    maxLength: 3,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
-                      // validator: (e) {
-                      //   if (e.isEmpty) {
-                      //     return "RT wajib diisi";
-                      //   }
-                      // },
+                      validator: (e) {
+                        if (e.isNotEmpty) {
+                          if (e.length < 3) {
+                            return "RT wajib diisi 3 digit nomor";
+                          }
+                        }
+                      },
                       focusNode: _subjekRt,
                       onFieldSubmitted: (term) {
                         _fieldFocusChange(context, _subjekRt, _subjekKtp);
@@ -1096,6 +1160,54 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
+                    "No HP/ Telp",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    maxLength: 29,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
+                      ],
+                      keyboardType: TextInputType.number,
+                      // validator: (e) {
+                      //   if (e.isEmpty) {
+                      //     return "No HP wajib diisi";
+                      //     // } else if (e.length < 16) {
+                      //     //   return "No HP wajib diisi";
+                      //   }
+                      // },
+                      focusNode: _subjekTelp,
+                      onFieldSubmitted: (term) {
+                        _fieldFocusChange(context, _subjekTelp, _subjekKtp);
+                      },
+                      textInputAction: TextInputAction.next,
+                      onSaved: (e) => subjekTelp = e,
+                      onChanged: (e) {
+                        setState(() {
+                          // validationText = "";
+                        });
+                      },
+                      controller: subjekTelpController,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 3.0),
+                              borderRadius: BorderRadius.circular(5.0)),
+                          fillColor: Colors.white,
+                          filled: true))
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
                     "No KTP",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
@@ -1103,9 +1215,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(16),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                    maxLength: 16,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
                       validator: (e) {
@@ -1162,9 +1274,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     height: 10,
                   ),
                   TextFormField(
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                        WhitelistingTextInputFormatter(RegExp("[0123456789]")),
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
                       keyboardType: TextInputType.number,
                       // validator: (e) {
@@ -1223,7 +1334,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                             _bangunanke = selected ? 1 : _bangunanke;
                             print("bangunan ke : $_bangunanke");
                             _istanahbangunan = 1;
-                            _value2 = selected ? 0 : 0;
+                            _value2 = 0;
                             _jenisTanah();
                           });
                         },
@@ -1242,7 +1353,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                             _bangunanke = selected ? 0 : 0;
                             print("bangunan ke : $_bangunanke");
                             _istanahbangunan = 0;
-                            _value2 = selected ? 1 : 1;
+                            _value2 = 1;
                             _jenisTanah();
                           });
                         },
@@ -1261,7 +1372,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                             _bangunanke = selected ? 0 : 0;
                             print("bangunan ke : $_bangunanke");
                             _istanahbangunan = 0;
-                            _value2 = selected ? 2 : 2;
+                            _value2 = 2;
                             _jenisTanah();
                           });
                         },
@@ -1287,8 +1398,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      // print("$nip, $pass");
       simpan();
+      (_value2 == 0) ? simpanbangunan() : () {};
+    } else {
+      FocusScope.of(context).requestFocus(_nopAsalFocus);
     }
     // }
   }
@@ -1337,20 +1450,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
       "tanahluas": tanahLuas.toString(),
-      "tanahjenis": _value2.toString(),
-      "bangunanluas": bangunanLuas.toString(),
-      "bangunanbangun": bangunanTahunBangun.toString(),
-      "bangunanrenov": bangunanTahunRenov.toString(),
-      "bangunanjumlahlantai": bangunanLantaiJumlah.toString(),
-      "bangunandaya": bangunanListrikDaya.toString(),
-      "bangunanjumlah": bangunanJumlah.toString(),
-      "bangunanpenggunaan": _bangunanPenggunaan.toString(),
-      "bangunankondisi": _bangunanKondisi.toString(),
-      "bangunankonstruksi": _bangunanKonstruksi.toString(),
-      "bangunanatap": _bangunanAtap.toString(),
-      "bangunandinding": _bangunanDinding.toString(),
-      "bangunanlantai": _bangunanLantai.toString(),
-      "bangunanlangit": _bangunanLangit.toString(),
+      "tanahjenis": (_value2 + 1).toString(),
+      "nip": nip.toString(),
       "andjwt": andjwt.toString()
     });
     // print(nopAsal.toString());
@@ -1377,17 +1478,15 @@ class _PerekamanPageState extends State<PerekamanPage> {
     new Future.delayed(new Duration(milliseconds: 0), () async {
       int value = data['value'];
       String msg = data['pesan'];
-      String tanahapi = data['tanahjenis'];
-      print(value);
       print(msg);
-      print(tanahapi);
+      // if (_value2 != 0) {
       if (value == 1) {
         Fluttertoast.showToast(
             msg: "Data BERHASIL diunggah",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,
-            // backgroundColor: Colors.red,
+            backgroundColor: Colors.blue.withOpacity(0.5),
             textColor: Colors.white,
             fontSize: 16.0);
         setState(() {});
@@ -1400,11 +1499,70 @@ class _PerekamanPageState extends State<PerekamanPage> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,
-            // backgroundColor: Colors.red,
+            backgroundColor: Colors.red.withOpacity(0.5),
             textColor: Colors.white,
             fontSize: 16.0);
         setState(() {});
         print("Data GAGAL diunggah");
+      }
+      // }
+    });
+  }
+
+  simpanbangunan() async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
+    String uid = idpref;
+    final response = await http.post(BaseUrl.rekambangunan, body: {
+      "uid": uid.toString(),
+      "uuid": formattedDate.toString(),
+      "bangunanluas": bangunanLuas.toString(),
+      "bangunanbangun": bangunanTahunBangun.toString(),
+      "bangunanrenov": bangunanTahunRenov.toString(),
+      "bangunanjumlahlantai": bangunanLantaiJumlah.toString(),
+      "bangunandaya": bangunanListrikDaya.toString(),
+      "bangunanjumlah": bangunanJumlah.toString(),
+      "bangunanpenggunaan": _bangunanPenggunaan.toString(),
+      "bangunankondisi": _bangunanKondisi.toString(),
+      "bangunankonstruksi": _bangunanKonstruksi.toString(),
+      "bangunanatap": _bangunanAtap.toString(),
+      "bangunandinding": _bangunanDinding.toString(),
+      "bangunanlantai": _bangunanLantai.toString(),
+      "bangunanlangit": _bangunanLangit.toString(),
+      "andjwt": andjwt.toString()
+    });
+
+    final data = jsonDecode(response.body);
+
+    new Future.delayed(new Duration(milliseconds: 0), () async {
+      int valbang = data['bangunan'];
+      String resbang = data['resbang'];
+      print(valbang);
+      print(resbang);
+      if (valbang == 1) {
+        // Fluttertoast.showToast(
+        //     msg: "Data BERHASIL diunggah",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIos: 1,
+        //     backgroundColor: Colors.blue.withOpacity(0.5),
+        //     textColor: Colors.white,
+        //     fontSize: 16.0);
+        // setState(() {});
+        // Navigator.pop(context);
+        print("Data Bangunan BERHASIL diunggah");
+      } else if (valbang == 0) {
+        // Navigator.pop(context);
+        // Fluttertoast.showToast(
+        //     msg: "Data GAGAL diunggah",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     timeInSecForIos: 1,
+        //     backgroundColor: Colors.red.withOpacity(0.5),
+        //     textColor: Colors.white,
+        //     fontSize: 16.0);
+        // setState(() {});
+        print("Data Bangunan GAGAL diunggah");
       }
     });
   }
@@ -1729,7 +1887,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(10),
                           WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                              RegExp("[0123456789\\.\\,]")),
                         ],
                         keyboardType: TextInputType.number,
                         validator: (e) {
@@ -1775,11 +1933,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(4),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(10),
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         validator: (e) {
@@ -1825,11 +1981,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
+                        inputFormatters: <TextInputFormatter>[
                           LengthLimitingTextInputFormatter(4),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         validator: (e) {
@@ -1875,11 +2029,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
+                        inputFormatters: <TextInputFormatter>[
                           LengthLimitingTextInputFormatter(4),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         // validator: (e) {
@@ -1925,11 +2077,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(4),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(10),
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         validator: (e) {
@@ -1975,11 +2125,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                       height: 10,
                     ),
                     TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(5),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.]")),
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(10),
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
                         validator: (e) {
@@ -2547,7 +2695,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     ),
                     Row(children: <Widget>[
                       _tambahButton(),
-                      (_bangunanke > 0) ? _batalTambahButton() : SizedBox(),
+                      IconButton(
+                          icon: Icon(
+                            Icons.help,
+                            color: Colors.blue[800],
+                            size: 35,
+                          ),
+                          onPressed: () {
+                            _tambahBangunanHelp();
+                          })
+                      // (_bangunanke > 0) ? _batalTambahButton() : SizedBox(),
                     ]),
                   ],
                 ),
@@ -2562,8 +2719,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Widget _tambahButton() {
     return Container(
       margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(50)),
         boxShadow: <BoxShadow>[],
         color: Colors.green[600],
       ),
@@ -2574,7 +2732,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
           splashColor: Colors.green.withOpacity(0.5),
           onTap: () {
-            _tanahLuas.requestFocus();
+            _bangunanLuas.requestFocus();
+            simpanbangunan();
             setState(() {
               _bangunanke = _bangunanke + 1;
               print("tambah : $_bangunanke");
@@ -2582,15 +2741,15 @@ class _PerekamanPageState extends State<PerekamanPage> {
             // check();
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 2.5,
+            width: MediaQuery.of(context).size.width / 1.75,
             padding: EdgeInsets.symmetric(vertical: 15),
             alignment: Alignment.center,
             child: Text(
-              'Tambah Bangunan',
+              'TAMBAH BANGUNAN',
               style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
-                  fontWeight: FontWeight.w400),
+                  fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -2613,7 +2772,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
           splashColor: Colors.red.withOpacity(0.5),
           onTap: () {
-            _tanahLuas.requestFocus();
+            _bangunanLuas.requestFocus();
             setState(() {
               (_bangunanke > 1)
                   ? _bangunanke = _bangunanke - 1

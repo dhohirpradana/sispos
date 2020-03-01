@@ -42,15 +42,6 @@ class HomePageState extends State<RekamanSayaPage> {
     return "Success!";
   }
 
-  deleteRekam() async {
-    var response = await http.post(Uri.encodeFull(BaseUrl.deleterekam),
-        body: {'spops_id': spopid}, headers: {"Accept": "application/json"});
-    // print("uid : $idpref");
-    this.setState(() {
-      data = jsonDecode(response.body);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -111,26 +102,6 @@ class HomePageState extends State<RekamanSayaPage> {
                         Text(" ( "),
                         Container(child: Text(data[index]["desa"])),
                         Text(" ) "),
-                        // SizedBox(
-                        //   width: 20,
-                        // ),
-                        // // Container(child: Text(data[index]["nama_subjek"])),
-                        // Container(child: Text(spopid.toString())),
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        // IconButton(
-                        //     icon: Icon(
-                        //       Icons.edit,
-                        //       color: Colors.green,
-                        //     ),
-                        //     onPressed: () {}),
-                        // IconButton(
-                        //     icon: Icon(
-                        //       Icons.delete,
-                        //       color: Colors.red,
-                        //     ),
-                        //     onPressed: () {})
                       ],
                     ),
                   ),
