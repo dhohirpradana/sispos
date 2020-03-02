@@ -6,7 +6,7 @@ class BaseUrl {
   static String desa = "http://catbaha.000webhostapp.com/desa.php";
   static String rekamsaya = "http://catbaha.000webhostapp.com/rekamsaya.php";
   static String rekambangunan = "http://catbaha.000webhostapp.com/rekambangunan.php";
-  static String rekamfoto = "http://catbaha.000webhostapp.com/rekamfoto.php";
+  static String rekamfoto = "http://catbaha.000webhostapp.com/foto/upload_foto_sertipikat.php";
 
   // static String lihat = "http://192.168.57.1/sispos/lihat.php";
   // static String rekam = "http://192.168.57.1/sispos/perekaman.php";

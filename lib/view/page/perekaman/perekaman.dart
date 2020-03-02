@@ -6,8 +6,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
 import 'package:image/image.dart' as Img;
@@ -1397,238 +1399,168 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   "Upload Foto Sertipikat",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
+                Column(
                   children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(bottom: 2.5),
-                          child: Material(
-                            elevation: 3,
-                            borderRadius: BorderRadius.circular(7),
-                            color: Colors.grey.withOpacity(0.4),
-                            child: IconButton(
-                              icon: Icon(Icons.image),
-                              onPressed: getImageGallery,
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 0.0, left: 0.0, right: 0.0),
+                      child: OutlineButton(
+                        onPressed: () => _openImagePickerModal(context),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).accentColor, width: 1.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.camera_alt),
+                            SizedBox(
+                              width: 5.0,
                             ),
-                          ),
+                            Text('Tambah Foto'),
+                          ],
                         ),
-                        Container(
-                          margin: EdgeInsets.only(top: 2.5),
-                          child: Material(
-                            elevation: 3,
-                            borderRadius: BorderRadius.circular(7),
-                            color: Colors.grey.withOpacity(0.4),
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt),
-                              onPressed: getImageCamera,
-                            ),
+                      ),
+                    ),
+                    _imageFile == null
+                        ? Text('Pilih sebuah gambar')
+                        : Image.file(
+                            _imageFile,
+                            fit: BoxFit.cover,
+                            height: 300.0,
+                            alignment: Alignment.topCenter,
+                            width: MediaQuery.of(context).size.width,
                           ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Center(
-                      child: _image == null
-                          ? Container(
-                              padding: EdgeInsets.only(
-                                  top: 43, bottom: 43, left: 35, right: 35),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7),
-                                  color: Colors.grey.withOpacity(0.4)),
-                              child: Text("Tidak ada gambar yang dipilih"),
-                            )
-                          : Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      top: 3, bottom: 3, left: 80, right: 80),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7),
-                                      color: Colors.grey.withOpacity(0.4)),
-                                  child: Material(
-                                    elevation: 3,
-                                    child: Image.file(
-                                      _image,
-                                      height: 100,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ),
+                    _buildUploadBtn(),
                   ],
                 ),
               ],
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.only(bottom: 10),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: <Widget>[
-          //       Text(
-          //         "Upload Foto SPPT",
-          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          //       ),
-          //       SizedBox(
-          //         height: 10,
-          //       ),
-          //       Row(
-          //         children: <Widget>[
-          //           Column(
-          //             children: <Widget>[
-          //               Container(
-          //                 margin: EdgeInsets.only(bottom: 2.5),
-          //                 child: Material(
-          //                   elevation: 3,
-          //                   borderRadius: BorderRadius.circular(7),
-          //                   color: Colors.grey.withOpacity(0.4),
-          //                   child: IconButton(
-          //                     icon: Icon(Icons.image),
-          //                     onPressed: getImageGallery,
-          //                   ),
-          //                 ),
-          //               ),
-          //               Container(
-          //                 margin: EdgeInsets.only(top: 2.5),
-          //                 child: Material(
-          //                   elevation: 3,
-          //                   borderRadius: BorderRadius.circular(7),
-          //                   color: Colors.grey.withOpacity(0.4),
-          //                   child: IconButton(
-          //                     icon: Icon(Icons.camera_alt),
-          //                     onPressed: getImageCamera,
-          //                   ),
-          //                 ),
-          //               )
-          //             ],
-          //           ),
-          //           SizedBox(
-          //             width: 5,
-          //           ),
-          //           Center(
-          //             child: _image == null
-          //                 ? Container(
-          //                     padding: EdgeInsets.only(
-          //                         top: 43, bottom: 43, left: 35, right: 35),
-          //                     decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(7),
-          //                         color: Colors.grey.withOpacity(0.4)),
-          //                     child: Text("Tidak ada gambar yang dipilih"),
-          //                   )
-          //                 : Column(
-          //                     children: <Widget>[
-          //                       Container(
-          //                         padding: EdgeInsets.only(
-          //                             top: 3, bottom: 3, left: 80, right: 80),
-          //                         decoration: BoxDecoration(
-          //                             borderRadius: BorderRadius.circular(7),
-          //                             color: Colors.grey.withOpacity(0.4)),
-          //                         child: Material(
-          //                           elevation: 3,
-          //                           child: Image.file(
-          //                             _image,
-          //                             height: 100,
-          //                             fit: BoxFit.fill,
-          //                           ),
-          //                         ),
-          //                       ),
-          //                     ],
-          //                   ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Container(
-          //   margin: EdgeInsets.only(bottom: 10),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: <Widget>[
-          //       Text(
-          //         "Upload Foto KTP",
-          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          //       ),
-          //       SizedBox(
-          //         height: 10,
-          //       ),
-          //       Row(
-          //         children: <Widget>[
-          //           Column(
-          //             children: <Widget>[
-          //               Container(
-          //                 margin: EdgeInsets.only(bottom: 2.5),
-          //                 child: Material(
-          //                   elevation: 3,
-          //                   borderRadius: BorderRadius.circular(7),
-          //                   color: Colors.grey.withOpacity(0.4),
-          //                   child: IconButton(
-          //                     icon: Icon(Icons.image),
-          //                     onPressed: getImageGallery,
-          //                   ),
-          //                 ),
-          //               ),
-          //               Container(
-          //                 margin: EdgeInsets.only(top: 2.5),
-          //                 child: Material(
-          //                   elevation: 3,
-          //                   borderRadius: BorderRadius.circular(7),
-          //                   color: Colors.grey.withOpacity(0.4),
-          //                   child: IconButton(
-          //                     icon: Icon(Icons.camera_alt),
-          //                     onPressed: getImageCamera,
-          //                   ),
-          //                 ),
-          //               )
-          //             ],
-          //           ),
-          //           SizedBox(
-          //             width: 5,
-          //           ),
-          //           Center(
-          //             child: _image == null
-          //                 ? Container(
-          //                     padding: EdgeInsets.only(
-          //                         top: 43, bottom: 43, left: 35, right: 35),
-          //                     decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(7),
-          //                         color: Colors.grey.withOpacity(0.4)),
-          //                     child: Text("Tidak ada gambar yang dipilih"),
-          //                   )
-          //                 : Column(
-          //                     children: <Widget>[
-          //                       Container(
-          //                         padding: EdgeInsets.only(
-          //                             top: 3, bottom: 3, left: 80, right: 80),
-          //                         decoration: BoxDecoration(
-          //                             borderRadius: BorderRadius.circular(7),
-          //                             color: Colors.grey.withOpacity(0.4)),
-          //                         child: Material(
-          //                           elevation: 3,
-          //                           child: Image.file(
-          //                             _image,
-          //                             height: 100,
-          //                             fit: BoxFit.fill,
-          //                           ),
-          //                         ),
-          //                       ),
-          //                     ],
-          //                   ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // )
         ]));
+  }
+
+  File _imageFile;
+  bool _isUploading = false;
+  void _openImagePickerModal(BuildContext context) {
+    final flatButtonColor = Theme.of(context).primaryColor;
+    print('Image Picker Modal Called');
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 150.0,
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Pilih sebuah gambar',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Kamera'),
+                  onPressed: () {
+                    _getImage(context, ImageSource.camera);
+                  },
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Galeri'),
+                  onPressed: () {
+                    _getImage(context, ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _getImage(BuildContext context, ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
+    setState(() {
+      _imageFile = image;
+    });
+    // Closes the bottom sheet
+    Navigator.pop(context);
+  }
+
+  Widget _buildUploadBtn() {
+    Widget btnWidget = Container();
+    if (_isUploading) {
+      // File is being uploaded then show a progress indicator
+      btnWidget = Container(
+          margin: EdgeInsets.only(top: 10.0),
+          child: CircularProgressIndicator());
+    } else if (!_isUploading && _imageFile != null) {
+      // If image is picked by the user then show a upload btn
+      // btnWidget = Container(
+      //   margin: EdgeInsets.only(top: 10.0),
+      //   child: RaisedButton(
+      //     child: Text('Upload'),
+      //     onPressed: () {
+      //       // _startUploading();
+      //     },
+      //     color: Colors.pinkAccent,
+      //     textColor: Colors.white,
+      //   ),
+      // );
+    }
+    return btnWidget;
+  }
+
+  Future<Map<String, dynamic>> _uploadImage(File image) async {
+    setState(() {
+      _isUploading = true;
+    });
+    // Find the mime type of the selected file by looking at the header bytes of the file
+    final mimeTypeData =
+        lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
+    // Intilize the multipart request
+    final imageUploadRequest =
+        http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamfoto));
+    // Attach the file in the request
+    final file = await http.MultipartFile.fromPath('image', image.path,
+        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+    imageUploadRequest.fields['ext'] = mimeTypeData[1];
+    imageUploadRequest.files.add(file);
+    try {
+      final streamedResponse = await imageUploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      if (response.statusCode != 200) {
+        return null;
+      }
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      _resetState();
+      return responseData;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  void _startUploading() async {
+    final Map<String, dynamic> response = await _uploadImage(_imageFile);
+    print(response);
+    // Check if any error occured
+    if (response == null || response.containsKey("error")) {
+      // Toast.show("Image Upload Failed!!!", context,
+      //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      print("Failed");
+    } else {
+      // Toast.show("Image Uploaded Successfully!!!", context,
+      //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      print("Success");
+    }
+  }
+
+  void _resetState() {
+    setState(() {
+      _isUploading = false;
+      _imageFile = null;
+    });
   }
 
   File _image;
@@ -1647,10 +1579,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
     Img.Image smallerImg = Img.copyResize(image, width: 1000);
 
     var compressImage = await File("$path/FromGallery_$title.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 85));
 
     setState(() {
-      _image = compressImage;
+      _image = imageFile;
     });
   }
 
@@ -1669,47 +1601,28 @@ class _PerekamanPageState extends State<PerekamanPage> {
     Img.Image smallerImg = Img.copyResize(image, width: 1000);
 
     var compressImage = await File("$path/FromCamera_$title.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 85));
 
     setState(() {
-      _image = compressImage;
+      _image = imageFile;
     });
   }
 
-  Future simpanFoto(File imageFile) async {
+  Future upload(File imageFile) async {
     var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
     var uri = Uri.parse(BaseUrl.rekamfoto);
-    var request = new http.MultipartRequest("POST", uri);
 
-    var multipartFile = new http.MultipartFile("foto", stream, length,
+    var request = http.MultipartRequest("POST", uri);
+    var multipartFile = http.MultipartFile("foto", stream, length,
         filename: path.basename(imageFile.path));
     request.files.add(multipartFile);
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (BuildContext context) {
-    //     return Dialog(
-    //       child: new Row(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           Container(
-    //               margin: EdgeInsets.all(5),
-    //               child: new CircularProgressIndicator()),
-    //           new Text(""),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
     var response = await request.send();
+
     if (response.statusCode == 200) {
-      setState(() {
-        _image = null;
-      });
-      print("Berhasil upload foto");
+      print("berhasil upload gambar");
     } else {
-      print("Gagal upload foto");
+      print("gagal upload gambar");
     }
   }
 
@@ -1725,7 +1638,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
     if (form.validate()) {
       form.save();
       simpan();
-      simpanFoto(_image);
+      // upload(_image);
+      _startUploading();
       (_value2 == 0) ? simpanbangunan() : () {};
     } else {
       FocusScope.of(context).requestFocus(_nopAsalFocus);
