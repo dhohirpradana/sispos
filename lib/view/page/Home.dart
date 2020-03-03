@@ -32,7 +32,13 @@ class _RumahPageState extends State<RumahPage> {
     });
   }
 
-  String id = "",nip = "", name = "", namanya = "", token = "", level = "", andjwt = "";
+  String id = "",
+      nip = "",
+      name = "",
+      namanya = "",
+      token = "",
+      level = "",
+      andjwt = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -148,13 +154,21 @@ class _RumahPageState extends State<RumahPage> {
                                                       Container(
                                                         child: Icon(
                                                           Icons.assignment,
-                                                          size: 32,
+                                                          size: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              15,
                                                         ),
                                                       ),
                                                       Text(
                                                         "RUJUKAN",
                                                         style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                29,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -208,13 +222,21 @@ class _RumahPageState extends State<RumahPage> {
                                                       Container(
                                                         child: Icon(
                                                           Icons.open_in_browser,
-                                                          size: 32,
+                                                          size: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              15,
                                                         ),
                                                       ),
                                                       Text(
                                                         "PENGAJUAN SAYA",
                                                         style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                29,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -272,13 +294,21 @@ class _RumahPageState extends State<RumahPage> {
                                                       Container(
                                                         child: Icon(
                                                           Icons.add,
-                                                          size: 32,
+                                                          size: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              15,
                                                         ),
                                                       ),
                                                       Text(
                                                         "PEREKAMAN DATA",
                                                         style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                29,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -325,13 +355,21 @@ class _RumahPageState extends State<RumahPage> {
                                                       Container(
                                                         child: Icon(
                                                           Icons.edit,
-                                                          size: 32,
+                                                          size: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              15,
                                                         ),
                                                       ),
                                                       Text(
                                                         "PEMUTAKHIRAN",
                                                         style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                29,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -376,13 +414,21 @@ class _RumahPageState extends State<RumahPage> {
                                                   Container(
                                                     child: Icon(
                                                       Icons.help_outline,
-                                                      size: 32,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              15,
                                                     ),
                                                   ),
                                                   Text(
                                                     "PANDUAN",
                                                     style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            29,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   )
@@ -414,15 +460,17 @@ class _RumahPageState extends State<RumahPage> {
                               margin: EdgeInsets.only(
                                   top: MediaQuery.of(context).size.height /
                                       7 /
-                                      2,
+                                      2.5,
                                   left: 10),
-                              width: 35,
+                              width: MediaQuery.of(context).size.height / 16,
                               child: Image(
                                   image: AssetImage(
                                       'lib/view/assets/images/logokabpati.png'))),
                           Container(
                             margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height / 7 / 2,
+                                top: MediaQuery.of(context).size.height /
+                                    7 /
+                                    2.5,
                                 left: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,14 +478,19 @@ class _RumahPageState extends State<RumahPage> {
                                 Text(
                                   "SISPOS PAJAK",
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              17,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800),
                                 ),
                                 Text(
                                   "SISTEM PENDATAAN OBJEK DAN SUBJEK PAJAK",
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.white),
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              41,
+                                      color: Colors.white),
                                 )
                               ],
                             ),
@@ -450,7 +503,7 @@ class _RumahPageState extends State<RumahPage> {
                     // Logout Button
                     padding: EdgeInsets.only(top: 5),
                     margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 7 / 2,
+                        top: MediaQuery.of(context).size.height / 7 / 2.5,
                         right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -467,13 +520,14 @@ class _RumahPageState extends State<RumahPage> {
                               Icon(
                                 Icons.input,
                                 color: Colors.white,
-                                size: 20,
+                                size: MediaQuery.of(context).size.width / 15,
                               ),
                               SizedBox(width: 5),
                               Text(
                                 "Logout",
                                 style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 30,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white),
                               ),
@@ -493,7 +547,12 @@ class _RumahPageState extends State<RumahPage> {
                     children: <Widget>[
                       Container(
                           margin: EdgeInsets.only(bottom: 10),
-                          child: Text("© Babahaha 2020")),
+                          child: Text(
+                            "© Babahaha 2020",
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.width / 33,
+                            ),
+                          )),
                     ],
                   )
                 ],

@@ -71,7 +71,14 @@ class _PerekamanPageState extends State<PerekamanPage> {
               height: 245,
             ),
             Column(
-              children: <Widget>[Text("© Babahaha 2020")],
+              children: <Widget>[
+                Text(
+                  "© Babahaha 2020",
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width / 33,
+                  ),
+                )
+              ],
             ),
             SizedBox(
               height: 10,
