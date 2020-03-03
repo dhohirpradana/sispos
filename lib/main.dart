@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sispos_pajak/api/option_desa.dart';
-import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
 import 'view/boot/bootscreen.dart';
 
 void main() => runApp(MyApp());

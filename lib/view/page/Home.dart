@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sispos_pajak/api/option_desa.dart';
 import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
 import 'package:sispos_pajak/view/page/perekamansaya.dart';
-import 'package:sispos_pajak/view/page/rujukan.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
 
 class RumahPage extends StatefulWidget {

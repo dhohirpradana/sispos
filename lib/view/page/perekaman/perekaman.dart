@@ -1399,37 +1399,844 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   "Upload Foto Sertipikat",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 0.0, left: 0.0, right: 0.0),
-                      child: OutlineButton(
-                        onPressed: () => _openImagePickerModal(context),
-                        borderSide: BorderSide(
-                            color: Theme.of(context).accentColor, width: 1.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Icon(Icons.camera_alt),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            Text('Tambah Foto'),
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, left: 0.0, right: 0.0),
+                                child: _imageList.length > 0
+                                    ? Stack(
+                                        children: <Widget>[
+                                          Image.file(
+                                            _imageList[0],
+                                            fit: BoxFit.cover,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.7,
+                                            alignment: Alignment.topCenter,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                          ),
+                                          IconButton(
+                                              icon: Icon(Icons.delete_forever,
+                                                  size: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      13,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _imageList.removeAt(0);
+                                                });
+                                              })
+                                        ],
+                                      )
+                                    : OutlineButton(
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          child: Center(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.add_a_photo,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    10,
+                                              ),
+                                              onPressed: () =>
+                                                  _openImagePickerModal(
+                                                      context),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                            _imageList.length > 0
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList.length > 1
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList[1],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList.removeAt(1);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
                           ],
                         ),
-                      ),
-                    ),
-                    _imageFile == null
-                        ? Text('Pilih sebuah gambar')
-                        : Image.file(
-                            _imageFile,
-                            fit: BoxFit.cover,
-                            height: 300.0,
-                            alignment: Alignment.topCenter,
-                            width: MediaQuery.of(context).size.width,
-                          ),
-                    _buildUploadBtn(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _imageList.length > 1
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList.length > 2
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList[2],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList.removeAt(2);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox(),
+                            _imageList.length > 2
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList.length > 3
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList[3],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList.removeAt(4);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Upload Foto SPPT",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, left: 0.0, right: 0.0),
+                                child: _imageList1.length > 0
+                                    ? Stack(
+                                        children: <Widget>[
+                                          Image.file(
+                                            _imageList1[0],
+                                            fit: BoxFit.cover,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.7,
+                                            alignment: Alignment.topCenter,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                          ),
+                                          IconButton(
+                                              icon: Icon(Icons.delete_forever,
+                                                  size: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      13,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _imageList1.removeAt(0);
+                                                });
+                                              })
+                                        ],
+                                      )
+                                    : OutlineButton(
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          child: Center(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.add_a_photo,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    10,
+                                              ),
+                                              onPressed: () =>
+                                                  _openImagePickerModal1(
+                                                      context),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                            _imageList1.length > 0
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList1.length > 1
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList1[1],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList1.removeAt(1);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal1(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _imageList1.length > 1
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList1.length > 2
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList1[2],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList1.removeAt(2);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal1(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox(),
+                            _imageList1.length > 2
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList1.length > 3
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList1[3],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList1.removeAt(4);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal1(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Upload Foto KTP",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 0.0, left: 0.0, right: 0.0),
+                                child: _imageList2.length > 0
+                                    ? Stack(
+                                        children: <Widget>[
+                                          Image.file(
+                                            _imageList2[0],
+                                            fit: BoxFit.cover,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.7,
+                                            alignment: Alignment.topCenter,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                          ),
+                                          IconButton(
+                                              icon: Icon(Icons.delete_forever,
+                                                  size: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      13,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _imageList2.removeAt(0);
+                                                });
+                                              })
+                                        ],
+                                      )
+                                    : OutlineButton(
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          child: Center(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.add_a_photo,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    10,
+                                              ),
+                                              onPressed: () =>
+                                                  _openImagePickerModal2(
+                                                      context),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                            _imageList2.length > 0
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList2.length > 1
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList2[1],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList2.removeAt(1);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal2(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _imageList2.length > 1
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList2.length > 2
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList2[2],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList2.removeAt(2);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal2(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox(),
+                            _imageList2.length > 2
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 0.0, left: 0.0, right: 0.0),
+                                    child: _imageList2.length > 3
+                                        ? Stack(
+                                            children: <Widget>[
+                                              Image.file(
+                                                _imageList2[3],
+                                                fit: BoxFit.cover,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.7,
+                                                alignment: Alignment.topCenter,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.3,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                      Icons.delete_forever,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              13,
+                                                      color: Colors.red),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _imageList2.removeAt(4);
+                                                    });
+                                                  })
+                                            ],
+                                          )
+                                        : OutlineButton(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2.7,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        10,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _openImagePickerModal2(
+                                                          context),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                : SizedBox()
+                          ],
+                        )
+                      ],
+                    )
                   ],
                 ),
               ],
@@ -1439,6 +2246,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
   }
 
   File _imageFile;
+  List<File> _imageList = [];
+  List<File> _imageList1 = [];
+  List<File> _imageList2 = [];
   bool _isUploading = false;
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
@@ -1482,78 +2292,250 @@ class _PerekamanPageState extends State<PerekamanPage> {
     File image = await ImagePicker.pickImage(source: source);
     setState(() {
       _imageFile = image;
+      _imageList.add(_imageFile);
     });
     // Closes the bottom sheet
     Navigator.pop(context);
   }
 
-  Widget _buildUploadBtn() {
-    Widget btnWidget = Container();
-    if (_isUploading) {
-      // File is being uploaded then show a progress indicator
-      btnWidget = Container(
-          margin: EdgeInsets.only(top: 10.0),
-          child: CircularProgressIndicator());
-    } else if (!_isUploading && _imageFile != null) {
-      // If image is picked by the user then show a upload btn
-      // btnWidget = Container(
-      //   margin: EdgeInsets.only(top: 10.0),
-      //   child: RaisedButton(
-      //     child: Text('Upload'),
-      //     onPressed: () {
-      //       // _startUploading();
-      //     },
-      //     color: Colors.pinkAccent,
-      //     textColor: Colors.white,
-      //   ),
-      // );
-    }
-    return btnWidget;
+  void _openImagePickerModal1(BuildContext context) {
+    final flatButtonColor = Theme.of(context).primaryColor;
+    print('Image Picker Modal Called');
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 150.0,
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Pilih sebuah gambar',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Kamera'),
+                  onPressed: () {
+                    _getImage1(context, ImageSource.camera);
+                  },
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Galeri'),
+                  onPressed: () {
+                    _getImage1(context, ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
   }
 
-  Future<Map<String, dynamic>> _uploadImage(File image) async {
+  void _getImage1(BuildContext context, ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
     setState(() {
-      _isUploading = true;
+      _imageFile = image;
+      _imageList1.add(_imageFile);
     });
-    // Find the mime type of the selected file by looking at the header bytes of the file
-    final mimeTypeData =
-        lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
-    // Intilize the multipart request
-    final imageUploadRequest =
-        http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamfoto));
-    // Attach the file in the request
-    final file = await http.MultipartFile.fromPath('image', image.path,
-        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-    imageUploadRequest.fields['ext'] = mimeTypeData[1];
-    imageUploadRequest.files.add(file);
-    try {
-      final streamedResponse = await imageUploadRequest.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      if (response.statusCode != 200) {
-        return null;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      _resetState();
-      return responseData;
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    // Closes the bottom sheet
+    Navigator.pop(context);
   }
 
-  void _startUploading() async {
-    final Map<String, dynamic> response = await _uploadImage(_imageFile);
-    print(response);
-    // Check if any error occured
-    if (response == null || response.containsKey("error")) {
-      // Toast.show("Image Upload Failed!!!", context,
-      //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      print("Failed");
-    } else {
-      // Toast.show("Image Uploaded Successfully!!!", context,
-      //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      print("Success");
-    }
+  void _openImagePickerModal2(BuildContext context) {
+    final flatButtonColor = Theme.of(context).primaryColor;
+    print('Image Picker Modal Called');
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 150.0,
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Pilih sebuah gambar',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Kamera'),
+                  onPressed: () {
+                    _getImage2(context, ImageSource.camera);
+                  },
+                ),
+                FlatButton(
+                  textColor: flatButtonColor,
+                  child: Text('Galeri'),
+                  onPressed: () {
+                    _getImage2(context, ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _getImage2(BuildContext context, ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
+    setState(() {
+      _imageFile = image;
+      _imageList2.add(_imageFile);
+    });
+    // Closes the bottom sheet
+    Navigator.pop(context);
+  }
+
+  List<Widget> builtImageDisplay() {
+    return [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: _imageList.length == 0
+                ? new Image.asset('assets/images/format.jpg')
+                : GridView.count(
+                    shrinkWrap: true,
+                    primary: false,
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 5.0,
+                    crossAxisSpacing: 5.0,
+                    children: _imageList.map((File file) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: new GridTile(
+                          child: new Image.file(
+                            file,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+          ),
+        ),
+      )
+    ];
+  }
+
+  Future<Null> _uploadImagesSertipikat() async {
+    int i = 0354;
+    _imageList.forEach((f) async {
+      setState(() {
+        _isUploading = true;
+      });
+      // Find the mime type of the selected file by looking at the header bytes of the file
+      final mimeTypeData =
+          lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
+      // Intilize the multipart request
+      final imageUploadRequest =
+          http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamfoto));
+      // Attach the file in the request
+      Timer(Duration(seconds: 1), () async {
+        final file = await http.MultipartFile.fromPath('image', f.path,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        imageUploadRequest.fields['ext'] = mimeTypeData[1];
+        imageUploadRequest.fields['i'] = i.toString();
+        imageUploadRequest.fields['uid'] = idpref.toString();
+        imageUploadRequest.files.add(file);
+        try {
+          final streamedResponse = await imageUploadRequest.send();
+          final response = await http.Response.fromStream(streamedResponse);
+          if (response.statusCode != 200) {
+            // _uploadImagesSppt();
+          }
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          _resetState();
+          return responseData;
+        } catch (e) {
+          print(e);
+          return null;
+        }
+      });
+    });
+  }
+
+  Future<Null> _uploadImagesSppt() async {
+    int i = 02354;
+    _imageList1.forEach((f) async {
+      setState(() {
+        _isUploading = true;
+      });
+      // Find the mime type of the selected file by looking at the header bytes of the file
+      final mimeTypeData =
+          lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
+      // Intilize the multipart request
+      final imageUploadRequest =
+          http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamfoto1));
+      // Attach the file in the request
+      Timer(Duration(seconds: 1), () async {
+        final file = await http.MultipartFile.fromPath('image', f.path,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        imageUploadRequest.fields['ext'] = mimeTypeData[1];
+        imageUploadRequest.fields['i'] = i.toString();
+        imageUploadRequest.fields['uid'] = idpref.toString();
+        imageUploadRequest.files.add(file);
+        try {
+          final streamedResponse = await imageUploadRequest.send();
+          final response = await http.Response.fromStream(streamedResponse);
+          if (response.statusCode != 200) {
+            return null;
+          }
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          _resetState();
+          return responseData;
+        } catch (e) {
+          print(e);
+          return null;
+        }
+      });
+    });
+  }
+
+  Future<Null> _uploadImagesKtp() async {
+    int i = 012354;
+    _imageList2.forEach((f) async {
+      setState(() {
+        _isUploading = true;
+      });
+      // Find the mime type of the selected file by looking at the header bytes of the file
+      final mimeTypeData =
+          lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
+      // Intilize the multipart request
+      final imageUploadRequest =
+          http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamfoto2));
+      // Attach the file in the request
+      Timer(Duration(seconds: 1), () async {
+        final file = await http.MultipartFile.fromPath('image', f.path,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        imageUploadRequest.fields['ext'] = mimeTypeData[1];
+        imageUploadRequest.fields['i'] = i.toString();
+        imageUploadRequest.fields['uid'] = idpref.toString();
+        imageUploadRequest.files.add(file);
+        try {
+          final streamedResponse = await imageUploadRequest.send();
+          final response = await http.Response.fromStream(streamedResponse);
+          if (response.statusCode != 200) {
+            return null;
+          }
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          _resetState();
+          return responseData;
+        } catch (e) {
+          print(e);
+          return null;
+        }
+      });
+    });
   }
 
   void _resetState() {
@@ -1583,6 +2565,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
     setState(() {
       _image = imageFile;
+      _imageList.add(_image);
     });
   }
 
@@ -1605,25 +2588,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
     setState(() {
       _image = imageFile;
+      _imageList.add(_image);
     });
-  }
-
-  Future upload(File imageFile) async {
-    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
-    var uri = Uri.parse(BaseUrl.rekamfoto);
-
-    var request = http.MultipartRequest("POST", uri);
-    var multipartFile = http.MultipartFile("foto", stream, length,
-        filename: path.basename(imageFile.path));
-    request.files.add(multipartFile);
-    var response = await request.send();
-
-    if (response.statusCode == 200) {
-      print("berhasil upload gambar");
-    } else {
-      print("gagal upload gambar");
-    }
   }
 
   _fieldFocusChange(
@@ -1638,9 +2604,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     if (form.validate()) {
       form.save();
       simpan();
-      // upload(_image);
-      _startUploading();
-      (_value2 == 0) ? simpanbangunan() : () {};
     } else {
       FocusScope.of(context).requestFocus(_nopAsalFocus);
     }
@@ -1722,6 +2685,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
       print(msg);
       // if (_value2 != 0) {
       if (value == 1) {
+        (_value2 == 0) ? simpanbangunan() : () {};
+        _uploadImagesSertipikat();
+        _uploadImagesSppt();
+        _uploadImagesKtp();
         Fluttertoast.showToast(
             msg: "Data BERHASIL diunggah",
             toastLength: Toast.LENGTH_SHORT,

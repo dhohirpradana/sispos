@@ -64,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       preference.setInt("value", null);
       _loginStatus = LoginStatus.notSignIn;
-      preference.commit();
     });
   }
 
