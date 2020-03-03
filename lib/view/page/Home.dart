@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sispos_pajak/view/page/pengajuan.dart';
 import 'package:sispos_pajak/view/page/perekaman/perekaman.dart';
 import 'package:sispos_pajak/view/page/perekamansaya.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
@@ -199,7 +200,7 @@ class _RumahPageState extends State<RumahPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        RekamanSayaPage()),
+                                                        PengajuanSaya()),
                                               );
                                             },
                                             child: Container(
@@ -413,7 +414,7 @@ class _RumahPageState extends State<RumahPage> {
                                                 children: <Widget>[
                                                   Container(
                                                     child: Icon(
-                                                      Icons.help_outline,
+                                                      Icons.info,
                                                       size:
                                                           MediaQuery.of(context)
                                                                   .size

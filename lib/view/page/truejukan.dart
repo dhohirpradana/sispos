@@ -69,7 +69,170 @@ class HomePageState extends State<TruejukanPage> {
               return Card(
                 child: InkWell(
                   splashColor: Colors.blue[300],
-                  onDoubleTap: () {},
+                  onDoubleTap: () {
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        // return object of type Dialog
+                        return AlertDialog(
+                          title: Text("Detail Data Rujukan"),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("NOP"),
+                                  Text(
+                                    data[index]["nop"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                19,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 1, bottom: 3),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.lightGreen,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Nama Subjek Pajak"),
+                                  Text(
+                                    data[index]["nama_subjek_pajak"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                19,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 1, bottom: 3),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.lightGreen,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Alamat Wajib Pajak"),
+                                  Text(
+                                    data[index]["alamat_wp"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                19,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 1, bottom: 3),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.lightGreen,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Alamat Objek Pajak"),
+                                  Text(
+                                    data[index]["alamat_op"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                19,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 1, bottom: 3),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.lightGreen,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Luas Bumi SPPT"),
+                                  Text(
+                                    data[index]["luas_bumi_sppt"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                19,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 1, bottom: 3),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.lightGreen,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            // usually buttons at the bottom of the dialog
+                            FlatButton(
+                              child: Text(
+                                "OK",
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 22,
+                                    color: Colors.red),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   child: Container(
                     padding:
                         EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),

@@ -54,7 +54,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
         automaticallyImplyLeading: false,
         centerTitle: false,
         backgroundColor: primaryColor,
-        title: Text("PEREKAMAN DATA"),
+        title: Text("DATA PEREKAMAN SAYA"),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -260,8 +260,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
+          elevation: 3,
           title: Row(
             children: <Widget>[
               Icon(
@@ -276,7 +276,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
             ],
           ),
           content: Container(
-            height: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 1.5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,18 +291,22 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 SizedBox(
                   height: 15,
                 ),
+                Text(
+                    "Apabila nop asal yang anda memasukan tidak ditemukan pada database, data anda tidak akan tersimpan. Periksa kembali nop asal yang anda masukan atau anda dapat mengosongkannya."),
+                SizedBox(
+                  height: 15,
+                ),
                 Text("Lakukan pengisian dengan benar.")
               ],
             ),
           ),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            //  FlatButton(
-            //     child: Text("Close"),
-            //     onPressed: () {
-            //       Navigator.of(context).pop();
-            //     },
-            //   ),
+            FlatButton(
+              child: Text("Tutup", style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ],
         );
       },
@@ -330,7 +334,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
             ],
           ),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2,
+            height: MediaQuery.of(context).size.height / 1.5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,7 +402,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                         icon: Icon(
                           Icons.help,
                           color: Colors.blue[800],
-                          size: 35,
+                          size: MediaQuery.of(context).size.width / 16,
                         ),
                         onPressed: () {
                           _nopAsalHelp();
@@ -1397,6 +1401,17 @@ class _PerekamanPageState extends State<PerekamanPage> {
             ),
           ),
           (_value2 == 0) ? _rincianBangunan() : SizedBox(),
+          Container(
+            margin: EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            color: secondColor,
+            child: Text(
+              "UPLOAD FOTO DOKUMEN",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
           Container(
             margin: EdgeInsets.only(bottom: 10),
             child: Column(
@@ -2705,7 +2720,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
             textColor: Colors.white,
             fontSize: 16.0);
         setState(() {});
-        Navigator.pop(context);
+        Timer(Duration(seconds: 3), () {
+          Navigator.pop(context);
+        });
         print("Data BERHASIL diunggah");
       } else if (value == 0) {
         Navigator.pop(context);
@@ -2720,13 +2737,14 @@ class _PerekamanPageState extends State<PerekamanPage> {
         setState(() {});
         print("Data GAGAL diunggah");
       } else if (value == 2) {
+        _nopAsalFocus.requestFocus();
         Navigator.pop(context);
         Fluttertoast.showToast(
             msg: "Data NOP asal tidak ditemukan",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,
-            backgroundColor: Colors.red.withOpacity(0.5),
+            backgroundColor: Colors.black.withOpacity(0.5),
             textColor: Colors.white,
             fontSize: 16.0);
         setState(() {});
@@ -2798,7 +2816,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     return Column(
       children: <Widget>[
         Container(
-          // margin: EdgeInsets.only(bottom: 15),
           padding: EdgeInsets.all(10),
           width: MediaQuery.of(context).size.width,
           color: secondColor,
@@ -3922,11 +3939,14 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     ),
                     Row(children: <Widget>[
                       _tambahButton(),
+                      SizedBox(
+                        width: 15,
+                      ),
                       IconButton(
                           icon: Icon(
                             Icons.help,
                             color: Colors.blue[800],
-                            size: 35,
+                            size: MediaQuery.of(context).size.width / 16,
                           ),
                           onPressed: () {
                             _tambahBangunanHelp();

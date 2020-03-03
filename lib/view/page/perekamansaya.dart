@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
+import 'package:sispos_pajak/view/page/pengajuansaya/detail_perekaman.dart';
 
 class RekamanSayaPage extends StatefulWidget {
   @override
@@ -63,7 +63,7 @@ class HomePageState extends State<RekamanSayaPage> {
     color: Colors.white,
   );
   Widget appBarTitle = new Text(
-    "PENGAJUAN SAYA",
+    "DATA PEREKAMAN SAYA",
     style: new TextStyle(color: Colors.white),
   );
   final TextEditingController _searchQuery = new TextEditingController();
@@ -80,7 +80,15 @@ class HomePageState extends State<RekamanSayaPage> {
               return Card(
                 child: InkWell(
                   splashColor: Colors.blue[300],
-                  onDoubleTap: () {},
+                  onDoubleTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DetailPerekaman(
+                                id: data[index]["id"],
+                              )),
+                    );
+                  },
                   child: Container(
                     padding:
                         EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),
@@ -137,48 +145,49 @@ class HomePageState extends State<RekamanSayaPage> {
 
   Widget buildBar(BuildContext context) {
     return AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        backgroundColor: primaryColor,
-        title: appBarTitle,
-        actions: <Widget>[
-          IconButton(
-            icon: actionIcon,
-            onPressed: () {
-              setState(() {
-                if (this.actionIcon.icon == Icons.search) {
-                  this.actionIcon = Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  );
-                  this.appBarTitle = TextField(
-                    // inputFormatters: [
-                    //   new BlacklistingTextInputFormatter(
-                    //       new RegExp('[\\.|\\,]')),
-                    // ],
-                    onSubmitted: (v) {
-                      setState(() {
-                        cariData = v;
-                        print(cariData);
-                        getData();
-                      });
-                    },
-                    controller: _searchQuery,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search, color: Colors.white),
-                        hintText: "Cari...",
-                        hintStyle: TextStyle(color: Colors.white)),
-                  );
-                  _handleSearchStart();
-                } else {
-                  _handleSearchEnd();
-                }
-              });
-            },
-          ),
-        ]);
+      automaticallyImplyLeading: false,
+      centerTitle: false,
+      backgroundColor: primaryColor,
+      title: appBarTitle,
+      // actions: <Widget>[
+      //   IconButton(
+      //     icon: actionIcon,
+      //     onPressed: () {
+      //       setState(() {
+      //         if (this.actionIcon.icon == Icons.search) {
+      //           this.actionIcon = Icon(
+      //             Icons.close,
+      //             color: Colors.white,
+      //           );
+      //           this.appBarTitle = TextField(
+      //             // inputFormatters: [
+      //             //   new BlacklistingTextInputFormatter(
+      //             //       new RegExp('[\\.|\\,]')),
+      //             // ],
+      //             onSubmitted: (v) {
+      //               setState(() {
+      //                 cariData = v;
+      //                 print(cariData);
+      //                 getData();
+      //               });
+      //             },
+      //             controller: _searchQuery,
+      //             style: TextStyle(
+      //               color: Colors.white,
+      //             ),
+      //             decoration: InputDecoration(
+      //                 prefixIcon: Icon(Icons.search, color: Colors.white),
+      //                 hintText: "Cari...",
+      //                 hintStyle: TextStyle(color: Colors.white)),
+      //           );
+      //           _handleSearchStart();
+      //         } else {
+      //           _handleSearchEnd();
+      //         }
+      //       });
+      //     },
+      //   ),
+      // ]
+    );
   }
 }
