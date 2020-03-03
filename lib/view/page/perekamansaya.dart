@@ -19,7 +19,6 @@ class HomePageState extends State<RekamanSayaPage> {
       idpref = preferences.getString("id");
       nip = preferences.getString("nip");
       andjwt = preferences.getString("token");
-      // token = preferences.getString("token");
     });
     print("id: $idpref, andjwt : $andjwt");
   }
@@ -34,7 +33,6 @@ class HomePageState extends State<RekamanSayaPage> {
     }, headers: {
       "Accept": "application/json"
     });
-    print("uid : $idpref");
     this.setState(() {
       data = jsonDecode(response.body);
       // spopid = data['id'];
@@ -46,9 +44,8 @@ class HomePageState extends State<RekamanSayaPage> {
   void initState() {
     super.initState();
     getPref();
-    Future.delayed(const Duration(milliseconds: 700), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       getData();
-      setState(() {});
     });
     _IsSearching = false;
     cariData = "";

@@ -4090,8 +4090,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     setState(() {
       data = resBody;
     });
-    // print(resBody);
-
     return "Success mendapat data desa di pati";
   }
 
