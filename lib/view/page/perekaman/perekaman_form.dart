@@ -372,83 +372,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     return Form(
         key: _key,
         child: Column(children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 5, bottom: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "NOP Asal",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "* Kosongkan Jika",
-                      style: TextStyle(fontSize: 14, color: Colors.red),
-                    ),
-                    Text(
-                      " TIDAK ADA ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    IconButton(
-                        icon: Icon(
-                          Icons.help,
-                          color: Colors.blue[800],
-                          size: MediaQuery.of(context).size.width / 16,
-                        ),
-                        onPressed: () {
-                          _nopAsalHelp();
-                        })
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    initialValue: "33.18.010.",
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(24),
-                      WhitelistingTextInputFormatter(RegExp("[0123456789\\.]")),
-                    ],
-                    maxLength: 24,
-                    keyboardType: TextInputType.number,
-                    focusNode: _nopAsalFocus,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(
-                          context, _nopAsalFocus, _objekNamaJalanFocus);
-                    },
-                    validator: (e) {
-                      if (e.length > 0 && e.length < 24) {
-                        return "Masukan 24 karakter NOP";
-                      }
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => nopAsal = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    // controller: nopAsalController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
+          _nopAsal(),
           Container(
             margin: EdgeInsets.only(top: 10),
             padding: EdgeInsets.all(10),
@@ -460,102 +384,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Nama Jalan",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(30),
-                      BlacklistingTextInputFormatter(
-                          RegExp("[/`~!@#%^&=+*()?<>{[}]")),
-                    ],
-                    keyboardType: TextInputType.text,
-                    // validator: (e) {
-                    //   if (e.isEmpty) {
-                    //     return "Nama jalan wajib diisi";
-                    //   }
-                    // },
-                    focusNode: _objekNamaJalanFocus,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(
-                          context, _objekNamaJalanFocus, _objekBlok);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => objekNamajalan = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: objekNamaJalanController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Blok / KAV Nomor",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(20),
-                    ],
-                    keyboardType: TextInputType.text,
-                    // validator: (e) {
-                    //   if (e.isEmpty) {
-                    //     return "Blok / KAV No wajib diisi";
-                    //   }
-                    // },
-                    focusNode: _objekBlok,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _objekBlok, _objekRw);
-                      print(objekBlok);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => objekBlok = e.toUpperCase(),
-                    onChanged: (e) {
-                      if (objekBlokController.text != e.toUpperCase())
-                        objekBlokController.value = objekBlokController.value
-                            .copyWith(text: e.toUpperCase());
-                    },
-                    controller: objekBlokController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
+          _dataObjekNamaJalan(),
+          _dataObjekBlok(),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
             child: Row(
@@ -572,108 +402,14 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    _DesaOption()
+                    _desaOption()
                   ],
                 ),
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "RW",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    maxLength: 2,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (e) {
-                      if (e.isNotEmpty) {
-                        if (e.length < 2) {
-                          return "RW wajib diisi 2 digit nomor";
-                        }
-                      }
-                    },
-                    focusNode: _objekRw,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _objekRw, _objekRt);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => objekRw = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: objekRwController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "RT",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    maxLength: 3,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (e) {
-                      if (e.isNotEmpty) {
-                        if (e.length < 3) {
-                          return "RT wajib diisi 3 digit nomor";
-                        }
-                      }
-                    },
-                    focusNode: _objekRt,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _objekRt, _subjekNama);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => objekRt = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: objekRtController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
+          _dataObjekRw(),
+          _dataObjekRt(),
           Container(
             padding: EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width,
@@ -684,590 +420,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(bottom: 10, top: 10),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Status",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 12.0,
-                  children: <Widget>[
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.red[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Pemilik",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value == 0,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value = selected ? 0 : 0;
-                          _statusSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.red[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Penyewa",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value == 1,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value = selected ? 1 : 1;
-                          _statusSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.red[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Pengelola",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value == 2,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value = selected ? 2 : 2;
-                          _statusSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.red[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Pemakai",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value == 3,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value = selected ? 3 : 3;
-                          _statusSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.red[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Sengketa",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value == 4,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value = selected ? 4 : 4;
-                          _statusSubjek();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Pekerjaan",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 12.0,
-                  children: <Widget>[
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.green[600],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "PNS",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value1 == 0,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value1 = selected ? 0 : 0;
-                          _kerjaSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.green[600],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "ABRI",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value1 == 1,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value1 = selected ? 1 : 1;
-                          _kerjaSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.green[600],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Pensiunan",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value1 == 2,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value1 = selected ? 2 : 2;
-                          _kerjaSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.green[600],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Badan",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value1 == 3,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value1 = selected ? 3 : 3;
-                          _kerjaSubjek();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.green[600],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Lainya",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value1 == 4,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _value1 = selected ? 4 : 4;
-                          _kerjaSubjek();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Nama Subjek Pajak",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(20),
-                      BlacklistingTextInputFormatter(
-                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                    ],
-                    keyboardType: TextInputType.text,
-                    validator: (e) {
-                      if (e.isEmpty) {
-                        return "Nama subjek pajak wajib diisi";
-                      }
-                    },
-                    focusNode: _subjekNama,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekNama, _subjekNamaJalan);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekNama = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekNamaController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Nama jalan",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(30),
-                      BlacklistingTextInputFormatter(
-                          RegExp("[/`~!@#%^&=+*()?<>{[}]")),
-                    ],
-                    keyboardType: TextInputType.text,
-                    // validator: (e) {
-                    //   if (e.isEmpty) {
-                    //     return "Nama jalan wajib diisi";
-                    //   }
-                    // },
-                    focusNode: _subjekNamaJalan,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekNamaJalan, _subjekKab);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekNamaJalan = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekNamaJalanController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Kabupaten",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(15),
-                      BlacklistingTextInputFormatter(
-                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                    ],
-                    keyboardType: TextInputType.text,
-                    validator: (e) {
-                      if (e.isEmpty) {
-                        return "Kabupaten wajib diisi";
-                      }
-                    },
-                    focusNode: _subjekKab,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekKab, _subjekDesa);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekKab = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekKabController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Desa",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(30),
-                      BlacklistingTextInputFormatter(
-                          RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
-                    ],
-                    keyboardType: TextInputType.text,
-                    validator: (e) {
-                      if (e.isEmpty) {
-                        return "Desa wajib diisi";
-                      }
-                    },
-                    focusNode: _subjekDesa,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekDesa, _subjekRw);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekDesa = e,
-                    onChanged: (e) {
-                      setState(() {
-                        e.toString().toUpperCase();
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekDesaController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "RW",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    maxLength: 2,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (e) {
-                      if (e.isNotEmpty) {
-                        if (e.length < 2) {
-                          return "RW wajib diisi 2 digit nomor";
-                        }
-                      }
-                    },
-                    focusNode: _subjekRw,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekRw, _subjekRt);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekRw = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekRwController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "RT",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    maxLength: 3,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (e) {
-                      if (e.isNotEmpty) {
-                        if (e.length < 3) {
-                          return "RT wajib diisi 3 digit nomor";
-                        }
-                      }
-                    },
-                    focusNode: _subjekRt,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekRt, _subjekKtp);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekRt = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekRtController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "No HP/ Telp",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    // maxLength: 29,
-                    inputFormatters: <TextInputFormatter>[
-                      LengthLimitingTextInputFormatter(16),
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    // validator: (e) {
-                    //   if (e.isEmpty) {
-                    //     return "No HP wajib diisi";
-                    //     // } else if (e.length < 16) {
-                    //     //   return "No HP wajib diisi";
-                    //   }
-                    // },
-                    focusNode: _subjekTelp,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekTelp, _subjekKtp);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekTelp = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekTelpController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "No KTP",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    maxLength: 16,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    validator: (e) {
-                      if (e.isEmpty) {
-                        return "No KTP wajib diisi";
-                      } else if (e.length < 16) {
-                        return "No KTP wajib diisi 16 digit";
-                      }
-                    },
-                    focusNode: _subjekKtp,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(context, _subjekKtp, _tanahLuas);
-                    },
-                    textInputAction: TextInputAction.next,
-                    onSaved: (e) => subjekKtp = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: subjekKtpController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
+          _dataSubjekStatus(),
+          _dataSubjekKerja(),
+          _dataSubjekNama(),
+          _dataSubjeknamaJalan(),
+          _dataSubjekKerja(),
+          _dataSubjekDesa(),
+          _dataSubjekRw(),
+          _dataSubjekRt(),
+          _dataSubjekHp(),
+          _dataSubjekKtp(),
           Container(
             // margin: EdgeInsets.only(bottom: 15),
             padding: EdgeInsets.all(10),
@@ -1279,127 +441,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Luas Tanah",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    // validator: (e) {
-                    //   if (e.isEmpty) {
-                    //     return "No KTP wajib diisi";
-                    //   }
-                    // },
-                    focusNode: _tanahLuas,
-                    onFieldSubmitted: (term) {
-                      _tanahLuas.unfocus();
-                    },
-                    textInputAction: TextInputAction.done,
-                    onSaved: (e) => tanahLuas = e,
-                    onChanged: (e) {
-                      setState(() {
-                        // validationText = "";
-                      });
-                    },
-                    controller: tanahLuasController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 3.0),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        fillColor: Colors.white,
-                        filled: true))
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(bottom: 19, top: 10),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Jenis Tanah",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 12.0,
-                  children: <Widget>[
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.purple[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Tanah + Bangunan",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value2 == 0,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _bangunanke = selected ? 1 : _bangunanke;
-                          print("bangunan ke : $_bangunanke");
-                          _istanahbangunan = 1;
-                          _value2 = 0;
-                          _jenisTanah();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.purple[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Kavling",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value2 == 1,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _bangunanke = selected ? 0 : 0;
-                          print("bangunan ke : $_bangunanke");
-                          _istanahbangunan = 0;
-                          _value2 = 1;
-                          _jenisTanah();
-                        });
-                      },
-                    ),
-                    ChoiceChip(
-                      pressElevation: 0.0,
-                      selectedColor: Colors.purple[500],
-                      backgroundColor: Colors.blue[500],
-                      label: Text(
-                        "Tanah Kosong",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      selected: _value2 == 2,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _bangunanke = selected ? 0 : 0;
-                          print("bangunan ke : $_bangunanke");
-                          _istanahbangunan = 0;
-                          _value2 = 2;
-                          _jenisTanah();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          _dataTanahLuas(),
+          _dataTanahJenis(),
           (_value2 == 0) ? _rincianBangunan() : SizedBox(),
           Container(
             margin: EdgeInsets.only(bottom: 15),
@@ -1412,858 +455,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Upload Foto Sertipikat",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Column(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, left: 0.0, right: 0.0),
-                                child: _imageList.length > 0
-                                    ? Stack(
-                                        children: <Widget>[
-                                          Image.file(
-                                            _imageList[0],
-                                            fit: BoxFit.cover,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.7,
-                                            alignment: Alignment.topCenter,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.3,
-                                          ),
-                                          IconButton(
-                                              icon: Icon(Icons.delete_forever,
-                                                  size: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      13,
-                                                  color: Colors.red),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _imageList.removeAt(0);
-                                                });
-                                              })
-                                        ],
-                                      )
-                                    : OutlineButton(
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          child: Center(
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.add_a_photo,
-                                                size: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    10,
-                                              ),
-                                              onPressed: () =>
-                                                  _openImagePickerModal(
-                                                      context),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                            _imageList.length > 0
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList.length > 1
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList[1],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList.removeAt(1);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            _imageList.length > 1
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList.length > 2
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList[2],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList.removeAt(2);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox(),
-                            _imageList.length > 2
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList.length > 3
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList[3],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList.removeAt(4);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Upload Foto SPPT",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Column(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, left: 0.0, right: 0.0),
-                                child: _imageList1.length > 0
-                                    ? Stack(
-                                        children: <Widget>[
-                                          Image.file(
-                                            _imageList1[0],
-                                            fit: BoxFit.cover,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.7,
-                                            alignment: Alignment.topCenter,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.3,
-                                          ),
-                                          IconButton(
-                                              icon: Icon(Icons.delete_forever,
-                                                  size: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      13,
-                                                  color: Colors.red),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _imageList1.removeAt(0);
-                                                });
-                                              })
-                                        ],
-                                      )
-                                    : OutlineButton(
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          child: Center(
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.add_a_photo,
-                                                size: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    10,
-                                              ),
-                                              onPressed: () =>
-                                                  _openImagePickerModal1(
-                                                      context),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                            _imageList1.length > 0
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList1.length > 1
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList1[1],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList1.removeAt(1);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal1(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            _imageList1.length > 1
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList1.length > 2
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList1[2],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList1.removeAt(2);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal1(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox(),
-                            _imageList1.length > 2
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList1.length > 3
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList1[3],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList1.removeAt(4);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal1(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Upload Foto KTP",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Column(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0.0, left: 0.0, right: 0.0),
-                                child: _imageList2.length > 0
-                                    ? Stack(
-                                        children: <Widget>[
-                                          Image.file(
-                                            _imageList2[0],
-                                            fit: BoxFit.cover,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.7,
-                                            alignment: Alignment.topCenter,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2.3,
-                                          ),
-                                          IconButton(
-                                              icon: Icon(Icons.delete_forever,
-                                                  size: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      13,
-                                                  color: Colors.red),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _imageList2.removeAt(0);
-                                                });
-                                              })
-                                        ],
-                                      )
-                                    : OutlineButton(
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.7,
-                                          child: Center(
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.add_a_photo,
-                                                size: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    10,
-                                              ),
-                                              onPressed: () =>
-                                                  _openImagePickerModal2(
-                                                      context),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                            _imageList2.length > 0
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList2.length > 1
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList2[1],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList2.removeAt(1);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal2(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            _imageList2.length > 1
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList2.length > 2
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList2[2],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList2.removeAt(2);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal2(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox(),
-                            _imageList2.length > 2
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 0.0, right: 0.0),
-                                    child: _imageList2.length > 3
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Image.file(
-                                                _imageList2[3],
-                                                fit: BoxFit.cover,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.7,
-                                                alignment: Alignment.topCenter,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2.3,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(
-                                                      Icons.delete_forever,
-                                                      size:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              13,
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _imageList2.removeAt(4);
-                                                    });
-                                                  })
-                                            ],
-                                          )
-                                        : OutlineButton(
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.7,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        10,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _openImagePickerModal2(
-                                                          context),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                : SizedBox()
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
+          _dataUploadKtp(),
+          _dataUploadSertipikat(),
+          _dataUploadSppt(),
         ]));
   }
 
@@ -2673,6 +867,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "subjekrw": subjekRw.toString(),
       "subjekrt": subjekRt.toString(),
       "subjekktp": subjekKtp.toString(),
+      "subjektelp": subjekTelp.toString(),
       "uid": uid.toString(),
       "uuid": formattedDate.toString(),
       "tanahluas": tanahLuas.toString(),
@@ -3963,6 +2158,1801 @@ class _PerekamanPageState extends State<PerekamanPage> {
     );
   }
 
+  Widget _nopAsal() {
+    return Container(
+      margin: EdgeInsets.only(top: 5, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                "NOP Asal",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                "* Kosongkan Jika",
+                style: TextStyle(fontSize: 14, color: Colors.red),
+              ),
+              Text(
+                " TIDAK ADA ",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                  icon: Icon(
+                    Icons.help,
+                    color: Colors.blue[800],
+                    size: MediaQuery.of(context).size.width / 16,
+                  ),
+                  onPressed: () {
+                    _nopAsalHelp();
+                  })
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              initialValue: "33.18.010.",
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(24),
+                WhitelistingTextInputFormatter(RegExp("[0123456789\\.]")),
+              ],
+              maxLength: 24,
+              keyboardType: TextInputType.number,
+              focusNode: _nopAsalFocus,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _nopAsalFocus, _objekNamaJalanFocus);
+              },
+              validator: (e) {
+                if (e.length > 0 && e.length < 24) {
+                  return "Masukan 24 karakter NOP";
+                }
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => nopAsal = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              // controller: nopAsalController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataObjekNamaJalan() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Nama Jalan",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(30),
+                BlacklistingTextInputFormatter(
+                    RegExp("[/`~!@#%^&=+*()?<>{[}]")),
+              ],
+              keyboardType: TextInputType.text,
+              // validator: (e) {
+              //   if (e.isEmpty) {
+              //     return "Nama jalan wajib diisi";
+              //   }
+              // },
+              focusNode: _objekNamaJalanFocus,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _objekNamaJalanFocus, _objekBlok);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => objekNamajalan = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: objekNamaJalanController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataObjekBlok() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Blok / KAV Nomor",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+              ],
+              keyboardType: TextInputType.text,
+              // validator: (e) {
+              //   if (e.isEmpty) {
+              //     return "Blok / KAV No wajib diisi";
+              //   }
+              // },
+              focusNode: _objekBlok,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _objekBlok, _objekRw);
+                print(objekBlok);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => objekBlok = e.toUpperCase(),
+              onChanged: (e) {
+                if (objekBlokController.text != e.toUpperCase())
+                  objekBlokController.value =
+                      objekBlokController.value.copyWith(text: e.toUpperCase());
+              },
+              controller: objekBlokController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataObjekRw() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "RW",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 2,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isNotEmpty) {
+                  if (e.length < 2) {
+                    return "RW wajib diisi 2 digit nomor";
+                  }
+                }
+              },
+              focusNode: _objekRw,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _objekRw, _objekRt);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => objekRw = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: objekRwController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataObjekRt() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "RT",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 3,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isNotEmpty) {
+                  if (e.length < 3) {
+                    return "RT wajib diisi 3 digit nomor";
+                  }
+                }
+              },
+              focusNode: _objekRt,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _objekRt, _subjekNama);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => objekRt = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: objekRtController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekStatus() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 10, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Status",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.red[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Pemilik",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value = selected ? 0 : 0;
+                    _statusSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.red[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Penyewa",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value = selected ? 1 : 1;
+                    _statusSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.red[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Pengelola",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value = selected ? 2 : 2;
+                    _statusSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.red[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Pemakai",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value = selected ? 3 : 3;
+                    _statusSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.red[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Sengketa",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value == 4,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value = selected ? 4 : 4;
+                    _statusSubjek();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekKerja() {
+    return Container(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Pekerjaan",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.green[600],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "PNS",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value1 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value1 = selected ? 0 : 0;
+                    _kerjaSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.green[600],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "ABRI",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value1 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value1 = selected ? 1 : 1;
+                    _kerjaSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.green[600],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Pensiunan",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value1 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value1 = selected ? 2 : 2;
+                    _kerjaSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.green[600],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Badan",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value1 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value1 = selected ? 3 : 3;
+                    _kerjaSubjek();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.green[600],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Lainya",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value1 == 4,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value1 = selected ? 4 : 4;
+                    _kerjaSubjek();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekNama() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Nama Subjek Pajak",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+                BlacklistingTextInputFormatter(
+                    RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+              ],
+              keyboardType: TextInputType.text,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Nama subjek pajak wajib diisi";
+                }
+              },
+              focusNode: _subjekNama,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekNama, _subjekNamaJalan);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekNama = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekNamaController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjeknamaJalan() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Nama jalan",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(30),
+                BlacklistingTextInputFormatter(
+                    RegExp("[/`~!@#%^&=+*()?<>{[}]")),
+              ],
+              keyboardType: TextInputType.text,
+              focusNode: _subjekNamaJalan,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekNamaJalan, _subjekKab);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekNamaJalan = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekNamaJalanController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekKab() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Kabupaten",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(15),
+                BlacklistingTextInputFormatter(
+                    RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+              ],
+              keyboardType: TextInputType.text,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Kabupaten wajib diisi";
+                }
+              },
+              focusNode: _subjekKab,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekKab, _subjekDesa);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekKab = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekKabController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekDesa() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Desa",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(30),
+                BlacklistingTextInputFormatter(
+                    RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+              ],
+              keyboardType: TextInputType.text,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Desa wajib diisi";
+                }
+              },
+              focusNode: _subjekDesa,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekDesa, _subjekRw);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekDesa = e,
+              onChanged: (e) {
+                setState(() {
+                  e.toString().toUpperCase();
+                  // validationText = "";
+                });
+              },
+              controller: subjekDesaController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekRw() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "RW",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 2,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isNotEmpty) {
+                  if (e.length < 2) {
+                    return "RW wajib diisi 2 digit nomor";
+                  }
+                }
+              },
+              focusNode: _subjekRw,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekRw, _subjekRt);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekRw = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekRwController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekHp() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "No HP/ Telp",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              // maxLength: 29,
+              inputFormatters: <TextInputFormatter>[
+                LengthLimitingTextInputFormatter(16),
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              // validator: (e) {
+              //   if (e.isEmpty) {
+              //     return "No HP wajib diisi";
+              //     // } else if (e.length < 16) {
+              //     //   return "No HP wajib diisi";
+              //   }
+              // },
+              focusNode: _subjekTelp,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekTelp, _subjekKtp);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekTelp = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekTelpController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekKtp() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "No KTP",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 16,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "No KTP wajib diisi";
+                } else if (e.length < 16) {
+                  return "No KTP wajib diisi 16 digit";
+                }
+              },
+              focusNode: _subjekKtp,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekKtp, _tanahLuas);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekKtp = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekKtpController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataSubjekRt() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "RT",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 3,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isNotEmpty) {
+                  if (e.length < 3) {
+                    return "RT wajib diisi 3 digit nomor";
+                  }
+                }
+              },
+              focusNode: _subjekRt,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekRt, _subjekKtp);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekRt = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: subjekRtController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataTanahLuas() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Luas Tanah",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              // validator: (e) {
+              //   if (e.isEmpty) {
+              //     return "No KTP wajib diisi";
+              //   }
+              // },
+              focusNode: _tanahLuas,
+              onFieldSubmitted: (term) {
+                _tanahLuas.unfocus();
+              },
+              textInputAction: TextInputAction.done,
+              onSaved: (e) => tanahLuas = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: tanahLuasController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataTanahJenis() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Jenis Tanah",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.purple[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Tanah + Bangunan",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value2 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _bangunanke = selected ? 1 : _bangunanke;
+                    print("bangunan ke : $_bangunanke");
+                    _istanahbangunan = 1;
+                    _value2 = 0;
+                    _jenisTanah();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.purple[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Kavling",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value2 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _bangunanke = selected ? 0 : 0;
+                    print("bangunan ke : $_bangunanke");
+                    _istanahbangunan = 0;
+                    _value2 = 1;
+                    _jenisTanah();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Colors.purple[500],
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Tanah Kosong",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value2 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _bangunanke = selected ? 0 : 0;
+                    print("bangunan ke : $_bangunanke");
+                    _istanahbangunan = 0;
+                    _value2 = 2;
+                    _jenisTanah();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataUploadSertipikat() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Upload Foto Sertipikat",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Column(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              top: 0.0, left: 0.0, right: 0.0),
+                          child: _imageList.length > 0
+                              ? Stack(
+                                  children: <Widget>[
+                                    Image.file(
+                                      _imageList[0],
+                                      fit: BoxFit.cover,
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                              2.7,
+                                      alignment: Alignment.topCenter,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.3,
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete_forever,
+                                            size: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                13,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          setState(() {
+                                            _imageList.removeAt(0);
+                                          });
+                                        })
+                                  ],
+                                )
+                              : OutlineButton(
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    height:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                        ),
+                                        onPressed: () =>
+                                            _openImagePickerModal(context),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                      _imageList.length > 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList.length > 1
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList[1],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList.removeAt(1);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _imageList.length > 1
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList.length > 2
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList[2],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList.removeAt(2);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox(),
+                      _imageList.length > 2
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList.length > 3
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList[3],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList.removeAt(4);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataUploadSppt() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Upload Foto SPPT",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Column(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              top: 0.0, left: 0.0, right: 0.0),
+                          child: _imageList1.length > 0
+                              ? Stack(
+                                  children: <Widget>[
+                                    Image.file(
+                                      _imageList1[0],
+                                      fit: BoxFit.cover,
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                              2.7,
+                                      alignment: Alignment.topCenter,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.3,
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete_forever,
+                                            size: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                13,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          setState(() {
+                                            _imageList1.removeAt(0);
+                                          });
+                                        })
+                                  ],
+                                )
+                              : OutlineButton(
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    height:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                        ),
+                                        onPressed: () =>
+                                            _openImagePickerModal1(context),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                      _imageList1.length > 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList1.length > 1
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList1[1],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList1.removeAt(1);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal1(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _imageList1.length > 1
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList1.length > 2
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList1[2],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList1.removeAt(2);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal1(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox(),
+                      _imageList1.length > 2
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList1.length > 3
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList1[3],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList1.removeAt(4);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal1(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataUploadKtp() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Upload Foto KTP",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Column(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              top: 0.0, left: 0.0, right: 0.0),
+                          child: _imageList2.length > 0
+                              ? Stack(
+                                  children: <Widget>[
+                                    Image.file(
+                                      _imageList2[0],
+                                      fit: BoxFit.cover,
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                              2.7,
+                                      alignment: Alignment.topCenter,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.3,
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete_forever,
+                                            size: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                13,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          setState(() {
+                                            _imageList2.removeAt(0);
+                                          });
+                                        })
+                                  ],
+                                )
+                              : OutlineButton(
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    height:
+                                        MediaQuery.of(context).size.width / 2.7,
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                        ),
+                                        onPressed: () =>
+                                            _openImagePickerModal2(context),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                      _imageList2.length > 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList2.length > 1
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList2[1],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList2.removeAt(1);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal2(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _imageList2.length > 1
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList2.length > 2
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList2[2],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList2.removeAt(2);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal2(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox(),
+                      _imageList2.length > 2
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 0.0, left: 0.0, right: 0.0),
+                              child: _imageList2.length > 3
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Image.file(
+                                          _imageList2[3],
+                                          fit: BoxFit.cover,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.7,
+                                          alignment: Alignment.topCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                        ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete_forever,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    13,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageList2.removeAt(4);
+                                              });
+                                            })
+                                      ],
+                                    )
+                                  : OutlineButton(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2.7,
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add_a_photo,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  10,
+                                            ),
+                                            onPressed: () =>
+                                                _openImagePickerModal2(context),
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                          : SizedBox()
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _tambahButton() {
     return Container(
       margin: EdgeInsets.only(top: 10),
@@ -4093,12 +4083,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
     return "Success mendapat data desa di pati";
   }
 
-  Widget _DesaOption() {
+  Widget _desaOption() {
     return Material(
       shadowColor: Colors.purple,
       elevation: 9,
       child: Container(
         child: DropdownButton(
+          hint: Text("  Pilih desa                      "),
           items: data.map((item) {
             return new DropdownMenuItem(
               child: Container(
