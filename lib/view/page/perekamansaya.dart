@@ -35,7 +35,6 @@ class HomePageState extends State<RekamanSayaPage> {
     });
     this.setState(() {
       data = jsonDecode(response.body);
-      // spopid = data['id'];
     });
     return "Success!";
   }

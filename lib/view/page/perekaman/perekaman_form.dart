@@ -16,6 +16,7 @@ import 'package:image/image.dart' as Img;
 import 'package:async/async.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:sispos_pajak/view/page/perekamansaya.dart';
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -28,7 +29,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     super.initState();
     getSWData();
     getPref();
-    print("Jenis Tanah: $_tanah");
   }
 
   String idpref, andjwt, nip;
@@ -423,8 +423,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
           _dataSubjekStatus(),
           _dataSubjekKerja(),
           _dataSubjekNama(),
+          _dataSubjekKab(),
           _dataSubjeknamaJalan(),
-          _dataSubjekKerja(),
           _dataSubjekDesa(),
           _dataSubjekRw(),
           _dataSubjekRt(),
@@ -823,9 +823,20 @@ class _PerekamanPageState extends State<PerekamanPage> {
     } else {
       FocusScope.of(context).requestFocus(_nopAsalFocus);
     }
-    // }
   }
 
+  check1() {
+    setState(() {});
+    final form = _key.currentState;
+    if (form.validate()) {
+      form.save();
+      tambahBangunan();
+    } else {
+      FocusScope.of(context).requestFocus(_nopAsalFocus);
+    }
+  }
+
+  bool simbang = false;
   simpan() async {
     showDialog(
       context: context,
@@ -875,81 +886,238 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "nip": nip.toString(),
       "andjwt": andjwt.toString()
     });
-    // print(nopAsal.toString());
-    // print(objekNamajalan.toString());
-    // print(objekBlok.toString());
-    // print(objekKec.toString());
-    // print(objekDesa.toString());
-    // print(objekRw.toString());
-    // print(objekRt.toString());
-    // print(_status.toString());
-    // print(_kerja.toString());
-    // print(subjekNama.toString());
-    // print(subjekNamaJalan.toString());
-    // print(subjekKab.toString());
-    // print(subjekDesa.toString());
-    // print(subjekRw.toString());
-    // print(subjekRt.toString());
-    // print(subjekKtp.toString());
-    // print(formattedDate.toString());
-    // print(_tanahLuas.toString());
 
-    final data = jsonDecode(response.body);
+    if (simbang = false) {
+      final data = jsonDecode(response.body);
 
-    new Future.delayed(new Duration(milliseconds: 0), () async {
-      int value = data['value'];
-      String msg = data['pesan'];
-      print(msg);
-      // if (_value2 != 0) {
-      if (value == 1) {
-        (_value2 == 0) ? simpanbangunan() : () {};
-        _uploadImagesSertipikat();
-        _uploadImagesSppt();
-        _uploadImagesKtp();
-        Fluttertoast.showToast(
-            msg: "Data BERHASIL diunggah",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.blue.withOpacity(0.5),
-            textColor: Colors.white,
-            fontSize: 16.0);
-        setState(() {});
-        Timer(Duration(seconds: 3), () {
-          Navigator.pop(context);
-        });
-        print("Data BERHASIL diunggah");
-      } else if (value == 0) {
-        Navigator.pop(context);
-        Fluttertoast.showToast(
-            msg: "Data GAGAL diunggah",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.red.withOpacity(0.5),
-            textColor: Colors.white,
-            fontSize: 16.0);
-        setState(() {});
-        print("Data GAGAL diunggah");
-      } else if (value == 2) {
-        _nopAsalFocus.requestFocus();
-        Navigator.pop(context);
-        Fluttertoast.showToast(
-            msg: "Data NOP asal tidak ditemukan",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.black.withOpacity(0.5),
-            textColor: Colors.white,
-            fontSize: 16.0);
-        setState(() {});
-        print("Data NOP asal tidak ditemukan");
-      }
-      // }
+      new Future.delayed(new Duration(milliseconds: 200), () async {
+        int value = data['value'];
+        int tambang = data['tambang'];
+        String msg = data['pesan'];
+        print(msg);
+        if (value == 1) {
+          (_value2 == 0) ? simpanbangunan() : () {};
+          _uploadImagesSertipikat();
+          _uploadImagesSppt();
+          _uploadImagesKtp();
+
+          Timer(Duration(seconds: 3), () {
+            Fluttertoast.showToast(
+                msg: "Data BERHASIL diunggah",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.orange.withOpacity(0.7),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Timer(Duration(seconds: 1), () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => RekamanSayaPage()));
+            });
+          });
+          print("Data BERHASIL diunggah");
+        } else if (value == 0) {
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "Data GAGAL diunggah",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red.withOpacity(0.5),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Data GAGAL diunggah");
+          });
+        } else if (value == 2) {
+          _nopAsalFocus.requestFocus();
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "Data NOP asal tidak ditemukan",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.black.withOpacity(0.5),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Data NOP asal tidak ditemukan");
+          });
+        } else {
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "Data entah kemana",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.orange.withOpacity(0.5),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Value : $value");
+            print("Tambang : $tambang");
+          });
+        }
+      });
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => RekamanSayaPage()));
+    }
+  }
+
+  tambahBangunan() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {},
+          child: Dialog(
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: CircularProgressIndicator()),
+                new Text("Sedang upload data"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
+    String uid = idpref;
+    final response = await http.post(BaseUrl.rekam, body: {
+      "nopasal": nopAsal.toString(),
+      "objekjalan": objekNamajalan.toString(),
+      "objekblok": objekBlok.toString(),
+      "objekdesa": objekDesa.toString(),
+      "objekrw": objekRw.toString(),
+      "objekrt": objekRt.toString(),
+      "subjekstatus": _status.toString(),
+      "subjekpekerjaan": _kerja.toString(),
+      "subjeknama": subjekNama.toString(),
+      "subjeknamajalan": subjekNamaJalan.toString(),
+      "subjekkab": subjekKab.toString(),
+      "subjekdesa": subjekDesa.toString(),
+      "subjekrw": subjekRw.toString(),
+      "subjekrt": subjekRt.toString(),
+      "subjekktp": subjekKtp.toString(),
+      "subjektelp": subjekTelp.toString(),
+      "uid": uid.toString(),
+      "uuid": formattedDate.toString(),
+      "tanahluas": tanahLuas.toString(),
+      "tanahjenis": (_value2 + 1).toString(),
+      "nip": nip.toString(),
+      "andjwt": andjwt.toString()
     });
+
+    if (simbang = false) {
+      final data = jsonDecode(response.body);
+
+      new Future.delayed(new Duration(milliseconds: 200), () async {
+        int value = data['value'];
+        int tambang = data['tambang'];
+        String msg = data['pesan'];
+        print(msg);
+        if (value == 1) {
+          _uploadImagesSertipikat();
+          _uploadImagesSppt();
+          _uploadImagesKtp();
+          setState(() {
+            simbang = true;
+          });
+          Timer(Duration(seconds: 3), () {
+            Fluttertoast.showToast(
+                msg: "BERHASIL",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Timer(Duration(seconds: 2), () {
+              Navigator.pop(context);
+            });
+          });
+          print("BERHASIL");
+        } else if (value == 0) {
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "GAGAL",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Data GAGAL diunggah");
+          });
+        } else if (value == 2) {
+          _nopAsalFocus.requestFocus();
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "NOP ASAL TIDAK DITEMUKAN",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.orange.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Data NOP asal tidak ditemukan");
+          });
+        } else {
+          Timer(Duration(seconds: 2), () {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "Data entah kemana",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.orange.withOpacity(0.5),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            print("Value : $value");
+            print("Tambang : $tambang");
+          });
+        }
+      });
+    } else {
+      Navigator.pop(context);
+      simpanbangunan();
+    }
   }
 
   simpanbangunan() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {},
+          child: Dialog(
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: CircularProgressIndicator()),
+                new Text("Sedang upload data"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    Future.delayed(new Duration(milliseconds: 3000), () async {
+      Navigator.of(context).pop();
+    });
+
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
     String uid = idpref;
@@ -961,7 +1129,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
       "bangunanrenov": bangunanTahunRenov.toString(),
       "bangunanjumlahlantai": bangunanLantaiJumlah.toString(),
       "bangunandaya": bangunanListrikDaya.toString(),
-      // "bangunanjumlah": bangunanJumlah.toString(),
       "bangunanpenggunaan": _bangunanPenggunaan.toString(),
       "bangunankondisi": _bangunanKondisi.toString(),
       "bangunankonstruksi": _bangunanKonstruksi.toString(),
@@ -973,35 +1140,24 @@ class _PerekamanPageState extends State<PerekamanPage> {
     });
 
     final data = jsonDecode(response.body);
-
-    new Future.delayed(new Duration(milliseconds: 0), () async {
+    Future.delayed(new Duration(milliseconds: 1000), () async {
       int valbang = data['bangunan'];
-      String resbang = data['resbang'];
       print(valbang);
-      print(resbang);
       if (valbang == 1) {
-        // Fluttertoast.showToast(
-        //     msg: "Data BERHASIL diunggah",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.BOTTOM,
-        //     timeInSecForIos: 1,
-        //     backgroundColor: Colors.blue.withOpacity(0.5),
-        //     textColor: Colors.white,
-        //     fontSize: 16.0);
-        // setState(() {});
-        // Navigator.pop(context);
+        Fluttertoast.showToast(
+            msg: "BERHASIL UPLOAD DATA BANGUNAN",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.orange.withOpacity(0.7),
+            textColor: Colors.white,
+            fontSize: 16.0);
+        setState(() {
+          _bangunanke = _bangunanke + 1;
+          print("tambah ke => $_bangunanke");
+        });
         print("Data Bangunan BERHASIL diunggah");
       } else if (valbang == 0) {
-        // Navigator.pop(context);
-        // Fluttertoast.showToast(
-        //     msg: "Data GAGAL diunggah",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.BOTTOM,
-        //     timeInSecForIos: 1,
-        //     backgroundColor: Colors.red.withOpacity(0.5),
-        //     textColor: Colors.white,
-        //     fontSize: 16.0);
-        // setState(() {});
         print("Data Bangunan GAGAL diunggah");
       }
     });
@@ -1029,7 +1185,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
             child: Container(
               padding: EdgeInsets.all(5),
               child: Text(
-                "BANGUNAN KE - $_bangunanke",
+                "TAMBAH BANGUNAN - $_bangunanke",
                 style:
                     TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
               ),
@@ -1046,1111 +1202,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 "Jenis Penggunaan Bangunan",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              Wrap(
-                alignment: WrapAlignment.start,
-                spacing: 12.0,
-                children: <Widget>[
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Perumahan",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 0,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 0 : 0;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Perkantoran Swasta",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 1,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 1 : 1;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Pabrik",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 2,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 2 : 2;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Toko / Apotik / Pasar / Ruko",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 3,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 3 : 3;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Rumah Sakit Klinik",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 4,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 4 : 4;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Olahraga / Rekresi",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 5,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 5 : 5;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Hotel / Wisma",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 6,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 6 : 6;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Bengkel / Gudang / Pertanian",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 7,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 7 : 7;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Gedung Pemerintahan",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 8,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 8 : 8;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Lain-lain",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 9,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 9 : 9;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Bangunan Tak Kena Pajak",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 10,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 10 : 10;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Bangunan Parkir",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 11,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 11 : 11;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Apartemen",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 12,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 12 : 12;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Pompa Mobil",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 13,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 13 : 13;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Tangki Minyak",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 14,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 14 : 14;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                  ChoiceChip(
-                    pressElevation: 0.0,
-                    selectedColor: Colors.brown[500],
-                    backgroundColor: Colors.blue[500],
-                    label: Text(
-                      "Gedung Sekolah",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    selected: _value3 == 15,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _value3 = selected ? 15 : 15;
-                        _penggunaanBangunan();
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Luas Bangunan",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        // textCapitalization: TextCapitalization.characters,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(10),
-                          WhitelistingTextInputFormatter(
-                              RegExp("[0123456789\\.\\,]")),
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (e) {
-                          if (e.isEmpty) {
-                            return "Luas bangunan wajib diisi";
-                          }
-                        },
-                        focusNode: _bangunanLuas,
-                        onFieldSubmitted: (term) {
-                          _fieldFocusChange(
-                              context, _bangunanLuas, _bangunanLantaiJumlah);
-                        },
-                        textInputAction: TextInputAction.next,
-                        onSaved: (e) => bangunanLuas = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanLuasController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Jumlah Lantai",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(10),
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (e) {
-                          if (e.isEmpty) {
-                            return "Jumlah lantai wajib diisi";
-                          }
-                        },
-                        focusNode: _bangunanLantaiJumlah,
-                        onFieldSubmitted: (term) {
-                          _fieldFocusChange(context, _bangunanLantaiJumlah,
-                              _bangunanTahunBangun);
-                        },
-                        textInputAction: TextInputAction.next,
-                        onSaved: (e) => bangunanLantaiJumlah = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanLantaiJumlahController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Tahun Dibangun",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        maxLength: 4,
-                        inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (e) {
-                          if (e.isEmpty) {
-                            return "Tahun dibangun wajib diisi";
-                          }
-                        },
-                        focusNode: _bangunanTahunBangun,
-                        onFieldSubmitted: (term) {
-                          _fieldFocusChange(context, _bangunanTahunBangun,
-                              _bangunanTahunBangun);
-                        },
-                        textInputAction: TextInputAction.next,
-                        onSaved: (e) => bangunanTahunBangun = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanTahunBangunController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Tahun Direnovasi",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        maxLength: 4,
-                        inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        // validator: (e) {
-                        //   if (e.isEmpty) {
-                        //     return "Nama jalan wajib diisi";
-                        //   }
-                        // },
-                        focusNode: _bangunanTahunRenov,
-                        onFieldSubmitted: (term) {
-                          _fieldFocusChange(
-                              context, _bangunanTahunRenov, _bangunanJumlah);
-                        },
-                        textInputAction: TextInputAction.next,
-                        onSaved: (e) => bangunanTahunRenov = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanTahunRenovController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
-              // Container(
-              //   margin: EdgeInsets.symmetric(vertical: 10),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: <Widget>[
-              //       Text(
-              //         "Jumlah Bangunan",
-              //         style:
-              //             TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              //       ),
-              //       SizedBox(
-              //         height: 10,
-              //       ),
-              //       TextFormField(
-              //           inputFormatters: <TextInputFormatter>[
-              //             LengthLimitingTextInputFormatter(10),
-              //             WhitelistingTextInputFormatter.digitsOnly
-              //           ],
-              //           keyboardType: TextInputType.number,
-              //           validator: (e) {
-              //             if (e.isEmpty) {
-              //               return "Jumlah bangunan wajib diisi";
-              //             }
-              //           },
-              //           focusNode: _bangunanJumlah,
-              //           onFieldSubmitted: (term) {
-              //             _fieldFocusChange(
-              //                 context, _bangunanJumlah, _bangunanListrikDaya);
-              //           },
-              //           textInputAction: TextInputAction.next,
-              //           onSaved: (e) => bangunanJumlah = e,
-              //           onChanged: (e) {
-              //             setState(() {
-              //               // validationText = "";
-              //             });
-              //           },
-              //           controller: bangunanJumlahController,
-              //           obscureText: false,
-              //           decoration: InputDecoration(
-              //               border: UnderlineInputBorder(
-              //                   borderSide:
-              //                       BorderSide(color: Colors.grey, width: 3.0),
-              //                   borderRadius: BorderRadius.circular(5.0)),
-              //               fillColor: Colors.white,
-              //               filled: true))
-              //     ],
-              //   ),
-              // ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Daya Listrik Terpasang (WATT)",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                        inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(10),
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (e) {
-                          if (e.isEmpty) {
-                            return "Daya listrik terpasang wajib diisi";
-                          }
-                        },
-                        focusNode: _bangunanListrikDaya,
-                        onFieldSubmitted: (term) {
-                          _bangunanListrikDaya.unfocus();
-                          // _fieldFocusChange(
-                          //     context, _bangunanJumlah, _bangunanListrikDaya);
-                        },
-                        textInputAction: TextInputAction.done,
-                        onSaved: (e) => bangunanListrikDaya = e,
-                        onChanged: (e) {
-                          setState(() {
-                            // validationText = "";
-                          });
-                        },
-                        controller: bangunanListrikDayaController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey, width: 3.0),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            fillColor: Colors.white,
-                            filled: true))
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Kondisi Pada Umumnya",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Sangat Baik",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value4 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value4 = selected ? 0 : 0;
-                              _kondisiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Baik",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value4 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value4 = selected ? 1 : 1;
-                              _kondisiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Sedang",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value4 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value4 = selected ? 2 : 2;
-                              _kondisiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Jelek",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value4 == 3,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value4 = selected ? 3 : 3;
-                              _kondisiBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Konstruksi",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff4d089a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Baja",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value5 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value5 = selected ? 0 : 0;
-                              _konstruksiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff4d089a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Beton",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value5 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value5 = selected ? 1 : 1;
-                              _konstruksiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff4d089a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Batu Bata",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value5 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value5 = selected ? 2 : 2;
-                              _konstruksiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff4d089a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Kayu",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value5 == 3,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value5 = selected ? 3 : 3;
-                              _konstruksiBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Atap",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff5b8c5a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Decrabon / Beton / Genteng Glazur",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value6 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value6 = selected ? 0 : 0;
-                              _atapBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff5b8c5a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Genteng Beton / Alumunium",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value6 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value6 = selected ? 1 : 1;
-                              _atapBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff5b8c5a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Genteng Biasa",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value6 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value6 = selected ? 2 : 2;
-                              _atapBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff5b8c5a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Asbes",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value6 == 3,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value6 = selected ? 3 : 3;
-                              _atapBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff5b8c5a),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Seng",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value6 == 4,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value6 = selected ? 4 : 4;
-                              _atapBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Dinding",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffba6b57),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Kaca / Alumunium",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value7 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value7 = selected ? 0 : 0;
-                              _dindingBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffba6b57),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Beton",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value7 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value7 = selected ? 1 : 1;
-                              _dindingBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffba6b57),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Batu Bata / Conblok",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value7 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value7 = selected ? 2 : 2;
-                              _dindingBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffba6b57),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Kayu",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value7 == 3,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value7 = selected ? 3 : 3;
-                              _dindingBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffba6b57),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Seng",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value7 == 4,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value7 = selected ? 4 : 4;
-                              _dindingBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Lantai",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff6e5773),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Marmer",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value8 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value8 = selected ? 0 : 0;
-                              _lantaiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff6e5773),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Keramik",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value8 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value8 = selected ? 1 : 1;
-                              _lantaiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff6e5773),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Teraso",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value8 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value8 = selected ? 2 : 2;
-                              _lantaiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff6e5773),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Ubin PC / Papan",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value8 == 3,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value8 = selected ? 3 : 3;
-                              _lantaiBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xff6e5773),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Semen",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value8 == 4,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value8 = selected ? 4 : 4;
-                              _lantaiBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 19, top: 10),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Langit - Langit",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 12.0,
-                      children: <Widget>[
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Akustik / Jati",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value9 == 0,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value9 = selected ? 0 : 0;
-                              _langitBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Triplek / Asbes Bambu",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value9 == 1,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value9 = selected ? 1 : 1;
-                              _langitBangunan();
-                            });
-                          },
-                        ),
-                        ChoiceChip(
-                          pressElevation: 0.0,
-                          selectedColor: Color(0xffc02739),
-                          backgroundColor: Colors.blue[500],
-                          label: Text(
-                            "Tidak Ada",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          selected: _value9 == 2,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              _value9 = selected ? 2 : 2;
-                              _langitBangunan();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(children: <Widget>[
-                      _tambahButton(),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      IconButton(
-                          icon: Icon(
-                            Icons.help,
-                            color: Colors.blue[800],
-                            size: MediaQuery.of(context).size.width / 16,
-                          ),
-                          onPressed: () {
-                            _tambahBangunanHelp();
-                          })
-                      // (_bangunanke > 0) ? _batalTambahButton() : SizedBox(),
-                    ]),
-                  ],
-                ),
-              ),
+              _dataBangunanPenggunaan(),
+              _dataBangunanLuas(),
+              _databangunanLantaiJumlah(),
+              _dataBangunanBangun(),
+              _dataBangunanRenov(),
+              _dataBangunanListrik(),
+              _dataBangunanKondisi(),
+              _dataBangunanKonstruksi(),
+              _dataBangunanAtap(),
+              _dataBangunanDinding(),
+              _dataBangunanLantai(),
+              _dataBangunanLangit()
             ],
           ),
         ),
@@ -3161,6 +2224,1082 @@ class _PerekamanPageState extends State<PerekamanPage> {
     );
   }
 
+  Widget _dataBangunanPenggunaan() {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: 12.0,
+      children: <Widget>[
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Perumahan",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 0,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 0 : 0;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Perkantoran Swasta",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 1,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 1 : 1;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Pabrik",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 2,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 2 : 2;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Toko / Apotik / Pasar / Ruko",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 3,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 3 : 3;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Rumah Sakit Klinik",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 4,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 4 : 4;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Olahraga / Rekresi",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 5,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 5 : 5;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Hotel / Wisma",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 6,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 6 : 6;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Bengkel / Gudang / Pertanian",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 7,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 7 : 7;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Gedung Pemerintahan",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 8,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 8 : 8;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Lain-lain",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 9,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 9 : 9;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Bangunan Tak Kena Pajak",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 10,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 10 : 10;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Bangunan Parkir",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 11,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 11 : 11;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Apartemen",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 12,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 12 : 12;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Pompa Mobil",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 13,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 13 : 13;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Tangki Minyak",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 14,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 14 : 14;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+        ChoiceChip(
+          pressElevation: 0.0,
+          selectedColor: Colors.brown[500],
+          backgroundColor: Colors.blue[500],
+          label: Text(
+            "Gedung Sekolah",
+            style: TextStyle(color: Colors.white),
+          ),
+          selected: _value3 == 15,
+          onSelected: (bool selected) {
+            setState(() {
+              _value3 = selected ? 15 : 15;
+              _penggunaanBangunan();
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _dataBangunanLuas() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Luas Bangunan",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              // textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(10),
+                WhitelistingTextInputFormatter(RegExp("[0123456789\\.\\,]")),
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Luas bangunan wajib diisi";
+                }
+              },
+              focusNode: _bangunanLuas,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(
+                    context, _bangunanLuas, _bangunanLantaiJumlah);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => bangunanLuas = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: bangunanLuasController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _databangunanLantaiJumlah() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Jumlah Lantai",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              inputFormatters: <TextInputFormatter>[
+                LengthLimitingTextInputFormatter(10),
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Jumlah lantai wajib diisi";
+                }
+              },
+              focusNode: _bangunanLantaiJumlah,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(
+                    context, _bangunanLantaiJumlah, _bangunanTahunBangun);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => bangunanLantaiJumlah = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: bangunanLantaiJumlahController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanBangun() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Tahun Dibangun",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 4,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Tahun dibangun wajib diisi";
+                }
+              },
+              focusNode: _bangunanTahunBangun,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(
+                    context, _bangunanTahunBangun, _bangunanTahunBangun);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => bangunanTahunBangun = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: bangunanTahunBangunController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanRenov() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Tahun Direnovasi",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 4,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              // validator: (e) {
+              //   if (e.isEmpty) {
+              //     return "Nama jalan wajib diisi";
+              //   }
+              // },
+              focusNode: _bangunanTahunRenov,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(
+                    context, _bangunanTahunRenov, _bangunanJumlah);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => bangunanTahunRenov = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: bangunanTahunRenovController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanListrik() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Daya Listrik Terpasang (WATT)",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              inputFormatters: <TextInputFormatter>[
+                LengthLimitingTextInputFormatter(10),
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Daya listrik terpasang wajib diisi";
+                }
+              },
+              focusNode: _bangunanListrikDaya,
+              onFieldSubmitted: (term) {
+                _bangunanListrikDaya.unfocus();
+                // _fieldFocusChange(
+                //     context, _bangunanJumlah, _bangunanListrikDaya);
+              },
+              textInputAction: TextInputAction.done,
+              onSaved: (e) => bangunanListrikDaya = e,
+              onChanged: (e) {
+                setState(() {
+                  // validationText = "";
+                });
+              },
+              controller: bangunanListrikDayaController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanKondisi() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Kondisi Pada Umumnya",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Sangat Baik",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value4 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value4 = selected ? 0 : 0;
+                    _kondisiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Baik",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value4 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value4 = selected ? 1 : 1;
+                    _kondisiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Sedang",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value4 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value4 = selected ? 2 : 2;
+                    _kondisiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Jelek",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value4 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value4 = selected ? 3 : 3;
+                    _kondisiBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanKonstruksi() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Konstruksi",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff4d089a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Baja",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value5 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value5 = selected ? 0 : 0;
+                    _konstruksiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff4d089a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Beton",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value5 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value5 = selected ? 1 : 1;
+                    _konstruksiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff4d089a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Batu Bata",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value5 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value5 = selected ? 2 : 2;
+                    _konstruksiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff4d089a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Kayu",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value5 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value5 = selected ? 3 : 3;
+                    _konstruksiBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanAtap() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Atap",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff5b8c5a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Decrabon / Beton / Genteng Glazur",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value6 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value6 = selected ? 0 : 0;
+                    _atapBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff5b8c5a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Genteng Beton / Alumunium",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value6 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value6 = selected ? 1 : 1;
+                    _atapBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff5b8c5a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Genteng Biasa",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value6 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value6 = selected ? 2 : 2;
+                    _atapBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff5b8c5a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Asbes",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value6 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value6 = selected ? 3 : 3;
+                    _atapBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff5b8c5a),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Seng",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value6 == 4,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value6 = selected ? 4 : 4;
+                    _atapBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanDinding() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Dinding",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffba6b57),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Kaca / Alumunium",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value7 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value7 = selected ? 0 : 0;
+                    _dindingBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffba6b57),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Beton",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value7 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value7 = selected ? 1 : 1;
+                    _dindingBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffba6b57),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Batu Bata / Conblok",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value7 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value7 = selected ? 2 : 2;
+                    _dindingBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffba6b57),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Kayu",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value7 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value7 = selected ? 3 : 3;
+                    _dindingBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffba6b57),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Seng",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value7 == 4,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value7 = selected ? 4 : 4;
+                    _dindingBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanLantai() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Lantai",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff6e5773),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Marmer",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value8 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value8 = selected ? 0 : 0;
+                    _lantaiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff6e5773),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Keramik",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value8 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value8 = selected ? 1 : 1;
+                    _lantaiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff6e5773),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Teraso",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value8 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value8 = selected ? 2 : 2;
+                    _lantaiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff6e5773),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Ubin PC / Papan",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value8 == 3,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value8 = selected ? 3 : 3;
+                    _lantaiBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xff6e5773),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Semen",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value8 == 4,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value8 = selected ? 4 : 4;
+                    _lantaiBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanLangit() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 19, top: 10),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Langit - Langit",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 12.0,
+            children: <Widget>[
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Akustik / Jati",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value9 == 0,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value9 = selected ? 0 : 0;
+                    _langitBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Triplek / Asbes Bambu",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value9 == 1,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value9 = selected ? 1 : 1;
+                    _langitBangunan();
+                  });
+                },
+              ),
+              ChoiceChip(
+                pressElevation: 0.0,
+                selectedColor: Color(0xffc02739),
+                backgroundColor: Colors.blue[500],
+                label: Text(
+                  "Tidak Ada",
+                  style: TextStyle(color: Colors.white),
+                ),
+                selected: _value9 == 2,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _value9 = selected ? 2 : 2;
+                    _langitBangunan();
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(children: <Widget>[
+            _tambahButton(),
+            SizedBox(
+              width: 15,
+            ),
+            IconButton(
+                icon: Icon(
+                  Icons.help,
+                  color: Colors.blue[800],
+                  size: MediaQuery.of(context).size.width / 16,
+                ),
+                onPressed: () {
+                  _tambahBangunanHelp();
+                })
+            // (_bangunanke > 0) ? _batalTambahButton() : SizedBox(),
+          ]),
+        ],
+      ),
+    );
+  }
+
   Widget _dataUploadSertipikat() {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
@@ -3970,12 +4109,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
           splashColor: Colors.green.withOpacity(0.5),
           onTap: () {
             _bangunanLuas.requestFocus();
-            simpanbangunan();
-            setState(() {
-              _bangunanke = _bangunanke + 1;
-              print("tambah : $_bangunanke");
-            });
-            // check();
+            check1();
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 1.75,

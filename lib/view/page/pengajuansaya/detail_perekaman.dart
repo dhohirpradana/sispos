@@ -274,10 +274,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => RekamanSayaPage()));
-            });
+            Navigator.pop(context);
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.3,
