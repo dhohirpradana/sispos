@@ -13,10 +13,7 @@ import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
 import 'package:image/image.dart' as Img;
-import 'package:async/async.dart';
-import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:sispos_pajak/view/page/perekamansaya.dart';
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -95,8 +92,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   final FocusNode _nopAsalFocus = FocusNode();
   final FocusNode _objekNamaJalanFocus = FocusNode();
   final FocusNode _objekBlok = FocusNode();
-  final FocusNode _objekKec = FocusNode();
-  final FocusNode _objekDesa = FocusNode();
   final FocusNode _objekRw = FocusNode();
   final FocusNode _objekRt = FocusNode();
   final FocusNode _subjekNama = FocusNode();
@@ -112,7 +107,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   final FocusNode _bangunanLantaiJumlah = FocusNode();
   final FocusNode _bangunanTahunBangun = FocusNode();
   final FocusNode _bangunanTahunRenov = FocusNode();
-  final FocusNode _bangunanJumlah = FocusNode();
   final FocusNode _bangunanListrikDaya = FocusNode();
 
   final nopAsalController = TextEditingController();
@@ -183,8 +177,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   int _bangunanDinding = 1;
   int _bangunanLantai = 1;
   int _bangunanLangit = 1;
-
-  int _istanahbangunan = 0;
 
   void _statusSubjek() {
     setState(() {
@@ -466,7 +458,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   List<File> _imageList = [];
   List<File> _imageList1 = [];
   List<File> _imageList2 = [];
-  bool _isUploading = false;
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
     print('Image Picker Modal Called');
@@ -647,9 +638,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Future<Null> _uploadImagesSertipikat() async {
     int i = 0354;
     _imageList.forEach((f) async {
-      setState(() {
-        _isUploading = true;
-      });
       // Find the mime type of the selected file by looking at the header bytes of the file
       final mimeTypeData =
           lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -684,9 +672,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Future<Null> _uploadImagesSppt() async {
     int i = 02354;
     _imageList1.forEach((f) async {
-      setState(() {
-        _isUploading = true;
-      });
       // Find the mime type of the selected file by looking at the header bytes of the file
       final mimeTypeData =
           lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -721,9 +706,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Future<Null> _uploadImagesKtp() async {
     int i = 012354;
     _imageList2.forEach((f) async {
-      setState(() {
-        _isUploading = true;
-      });
       // Find the mime type of the selected file by looking at the header bytes of the file
       final mimeTypeData =
           lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -757,7 +739,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
   void _resetState() {
     setState(() {
-      _isUploading = false;
       _imageFile = null;
     });
   }
@@ -2137,7 +2118,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   setState(() {
                     _bangunanke = selected ? 1 : _bangunanke;
                     print("bangunan ke : $_bangunanke");
-                    _istanahbangunan = 1;
                     _value2 = 0;
                     _jenisTanah();
                   });
@@ -2156,7 +2136,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   setState(() {
                     _bangunanke = selected ? 0 : 0;
                     print("bangunan ke : $_bangunanke");
-                    _istanahbangunan = 0;
                     _value2 = 1;
                     _jenisTanah();
                   });
@@ -2175,7 +2154,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   setState(() {
                     _bangunanke = selected ? 0 : 0;
                     print("bangunan ke : $_bangunanke");
-                    _istanahbangunan = 0;
                     _value2 = 2;
                     _jenisTanah();
                   });

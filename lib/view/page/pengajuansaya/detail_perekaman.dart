@@ -114,6 +114,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
 
   int _istanahbangunan = 0;
 
+  int ve_bang;
   String idpref, nip, andjwt = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -134,7 +135,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
     setState(() {
       spop_id = id;
     });
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 0), () {
       getData();
     });
     print("id spops : $spop_id");
@@ -175,25 +176,559 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
 
       tanahLuas = data['tanah_luas'];
 
-      if (_value2 == 0) {
-        bangunanLuas = data['bangunan_luas'];
-        bangunanLantaiJumlah = data['bangunan_lj'];
-        bangunanTahunBangun = data['bangunan_bangun'];
-        bangunanTahunRenov = data['bangunan_renov'];
-        bangunanListrikDaya = data['bangunan_listrik'];
+      ve_bang = int.parse(data['ve_bang']);
 
-        _value3 = int.parse(data['bangunan_penggunaan']) - 1;
-        _value4 = int.parse(data['bangunan_kondisi']) - 1;
-        _value5 = int.parse(data['bangunan_konstruksi']) - 1;
-        _value6 = int.parse(data['bangunan_atap']) - 1;
-        _value7 = int.parse(data['bangunan_dinding']) - 1;
-        _value8 = int.parse(data['bangunan_lantai']) - 1;
-        _value9 = int.parse(data['bangunan_langit']) - 1;
-      }
+      print(ve_bang);
 
       print("test data : $bangunanLantaiJumlah $bangunanListrikDaya");
     });
+    (ve_bang == 1)
+        ? Future.delayed(const Duration(milliseconds: 500), () {
+            getDataBang();
+          })
+        : () {};
     return "Success!";
+  }
+
+  List dataBang;
+  getDataBang() async {
+    var response =
+        await http.post(Uri.encodeFull(BaseUrl.detailbangunan), body: {
+      'spop_id': spop_id.toString(),
+      'nip': nip.toString(),
+      'andjwt': andjwt.toString()
+    }, headers: {
+      "Accept": "application/json"
+    });
+    setState(() {
+      dataBang = jsonDecode(response.body);
+    });
+    return "Success!";
+  }
+
+  Widget bangunanSaya() {
+    return SizedBox(
+      height: 155.354,
+      child: Material(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: dataBang == null ? 0 : dataBang.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              child: InkWell(
+                splashColor: Colors.blue[300],
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      // return object of type Dialog
+                      return AlertDialog(
+                        title: Row(
+                          children: <Widget>[
+                            Text("BANGUNAN ",
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 23,
+                                    color: Color(0xff088da5))),
+                            Text((index + 1).toString(),
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 15,
+                                    color: Color(0xff0e2f44))),
+                          ],
+                        ),
+                        content: SingleChildScrollView(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Luas Bangunan"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['bangunan_luas'],
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          " m2",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  25,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Jumlah Lantai"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['bangunan_lj'],
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          " Lt",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  25,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Tahun Dibangun"),
+                                    Text(
+                                      dataBang[index]['bangunan_bangun'],
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              19,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Tahun Direnovasi"),
+                                    Text(
+                                      dataBang[index]['bangunan_renov'],
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              19,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Daya Listrik Terpasang"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['bangunan_listrik'],
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          " WATT",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  25,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Jenis Penggunaan Bangunan"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['penggunaan_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Kondisi Pada Umumnya"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['kondisi_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Konstruksi"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['konstruksi_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Atap"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['atap_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Dinding"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['dinding_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Lantai"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['lantai_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text("Langit"),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          dataBang[index]['langit_nama']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.lightGreen,
+                                              width: 2.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        actions: <Widget>[
+                          // usually buttons at the bottom of the dialog
+                          FlatButton(
+                            child: Text(
+                              "Tutup",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.only(
+                      left: 9,
+                      right: 9,
+                      top: MediaQuery.of(context).size.width / 25,
+                      bottom: MediaQuery.of(context).size.width / 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            "Bangunan - ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text((index + 1).toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(dataBang[index]['bangunan_luas']),
+                          Text(" m2")
+                        ],
+                      ),
+                      GestureDetector(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.delete_forever,
+                            color: Colors.red,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -278,7 +813,8 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
       ),
       _dataTanahLuas(),
       _dataTanahJenis(),
-      (_value2 == 0) ? _rincianBangunan() : SizedBox(),
+      (_value2 == 0) ? bangunanSaya() : SizedBox(),
+      // (_value2 == 0) ? _rincianBangunan() : SizedBox(),
       SizedBox(
         height: 5,
       ),
