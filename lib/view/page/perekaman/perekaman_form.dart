@@ -29,6 +29,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     super.initState();
     getSWData();
     getPref();
+    simbang = 0;
   }
 
   String idpref, andjwt, nip;
@@ -54,7 +55,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
         automaticallyImplyLeading: false,
         centerTitle: false,
         backgroundColor: primaryColor,
-        title: Text("DATA PEREKAMAN SAYA"),
+        title: Text("PEREKAMAN DATA"),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -423,27 +424,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
           _dataSubjekStatus(),
           _dataSubjekKerja(),
           _dataSubjekNama(),
-          _dataSubjekKab(),
           _dataSubjeknamaJalan(),
+          _dataSubjekKab(),
           _dataSubjekDesa(),
           _dataSubjekRw(),
           _dataSubjekRt(),
-          _dataSubjekHp(),
           _dataSubjekKtp(),
-          Container(
-            // margin: EdgeInsets.only(bottom: 15),
-            padding: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width,
-            color: secondColor,
-            child: Text(
-              "DATA TANAH",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-          _dataTanahLuas(),
-          _dataTanahJenis(),
-          (_value2 == 0) ? _rincianBangunan() : SizedBox(),
+          _dataSubjekHp(),
           Container(
             margin: EdgeInsets.only(bottom: 15),
             padding: EdgeInsets.all(10),
@@ -458,6 +445,20 @@ class _PerekamanPageState extends State<PerekamanPage> {
           _dataUploadKtp(),
           _dataUploadSertipikat(),
           _dataUploadSppt(),
+          Container(
+            // margin: EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            color: secondColor,
+            child: Text(
+              "DATA TANAH",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          _dataTanahLuas(),
+          _dataTanahJenis(),
+          (_value2 == 0) ? _rincianBangunan() : SizedBox(),
         ]));
   }
 
@@ -815,13 +816,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
   }
 
   check() {
-    setState(() {});
     final form = _key.currentState;
-    if (form.validate()) {
-      form.save();
-      simpan();
+    if (simbang == 0) {
+      if (form.validate()) {
+        form.save();
+        simpan();
+      } else {
+        FocusScope.of(context).requestFocus(_nopAsalFocus);
+      }
     } else {
-      FocusScope.of(context).requestFocus(_nopAsalFocus);
+      simpan();
     }
   }
 
@@ -836,7 +840,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     }
   }
 
-  bool simbang = false;
+  int simbang = 0;
   simpan() async {
     showDialog(
       context: context,
@@ -862,32 +866,33 @@ class _PerekamanPageState extends State<PerekamanPage> {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
     String uid = idpref;
-    final response = await http.post(BaseUrl.rekam, body: {
-      "nopasal": nopAsal.toString(),
-      "objekjalan": objekNamajalan.toString(),
-      "objekblok": objekBlok.toString(),
-      "objekdesa": objekDesa.toString(),
-      "objekrw": objekRw.toString(),
-      "objekrt": objekRt.toString(),
-      "subjekstatus": _status.toString(),
-      "subjekpekerjaan": _kerja.toString(),
-      "subjeknama": subjekNama.toString(),
-      "subjeknamajalan": subjekNamaJalan.toString(),
-      "subjekkab": subjekKab.toString(),
-      "subjekdesa": subjekDesa.toString(),
-      "subjekrw": subjekRw.toString(),
-      "subjekrt": subjekRt.toString(),
-      "subjekktp": subjekKtp.toString(),
-      "subjektelp": subjekTelp.toString(),
-      "uid": uid.toString(),
-      "uuid": formattedDate.toString(),
-      "tanahluas": tanahLuas.toString(),
-      "tanahjenis": (_value2 + 1).toString(),
-      "nip": nip.toString(),
-      "andjwt": andjwt.toString()
-    });
 
-    if (simbang = false) {
+    if (simbang == 0) {
+      final response = await http.post(BaseUrl.rekam, body: {
+        "nopasal": nopAsal.toString(),
+        "objekjalan": objekNamajalan.toString(),
+        "objekblok": objekBlok.toString(),
+        "objekdesa": objekDesa.toString(),
+        "objekrw": objekRw.toString(),
+        "objekrt": objekRt.toString(),
+        "subjekstatus": _status.toString(),
+        "subjekpekerjaan": _kerja.toString(),
+        "subjeknama": subjekNama.toString(),
+        "subjeknamajalan": subjekNamaJalan.toString(),
+        "subjekkab": subjekKab.toString(),
+        "subjekdesa": subjekDesa.toString(),
+        "subjekrw": subjekRw.toString(),
+        "subjekrt": subjekRt.toString(),
+        "subjekktp": subjekKtp.toString(),
+        "subjektelp": subjekTelp.toString(),
+        "uid": uid.toString(),
+        "uuid": formattedDate.toString(),
+        "tanahluas": tanahLuas.toString(),
+        "tanahjenis": (_value2 + 1).toString(),
+        "nip": nip.toString(),
+        "andjwt": andjwt.toString()
+      });
+
       final data = jsonDecode(response.body);
 
       new Future.delayed(new Duration(milliseconds: 200), () async {
@@ -901,30 +906,28 @@ class _PerekamanPageState extends State<PerekamanPage> {
           _uploadImagesSppt();
           _uploadImagesKtp();
 
-          Timer(Duration(seconds: 3), () {
+          Timer(Duration(seconds: 2), () {
             Fluttertoast.showToast(
-                msg: "Data BERHASIL diunggah",
+                msg: "BERHASIL UPLOAD DATA",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
-                backgroundColor: Colors.orange.withOpacity(0.7),
+                backgroundColor: Colors.green.withOpacity(0.9),
                 textColor: Colors.white,
                 fontSize: 16.0);
-            Timer(Duration(seconds: 1), () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => RekamanSayaPage()));
-            });
+            Navigator.pop(context);
+            Navigator.pop(context);
           });
           print("Data BERHASIL diunggah");
         } else if (value == 0) {
           Timer(Duration(seconds: 2), () {
             Navigator.pop(context);
             Fluttertoast.showToast(
-                msg: "Data GAGAL diunggah",
+                msg: "GAGAL UPLOAD DATA",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
-                backgroundColor: Colors.red.withOpacity(0.5),
+                backgroundColor: Colors.red.withOpacity(0.9),
                 textColor: Colors.white,
                 fontSize: 16.0);
             print("Data GAGAL diunggah");
@@ -960,79 +963,95 @@ class _PerekamanPageState extends State<PerekamanPage> {
         }
       });
     } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => RekamanSayaPage()));
+      Fluttertoast.showToast(
+          msg: "BERHASIL SIMPAN",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.blue.withOpacity(0.9),
+          textColor: Colors.white,
+          fontSize: 16.0);
+      Navigator.pop(context);
+      Timer(Duration(seconds: 3), () {
+        Navigator.pop(context);
+      });
     }
   }
 
   tambahBangunan() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {},
-          child: Dialog(
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    margin: EdgeInsets.all(10),
-                    child: CircularProgressIndicator()),
-                new Text("Sedang upload data"),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    (simbang == 0)
+        ? showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return WillPopScope(
+                onWillPop: () {},
+                child: Dialog(
+                  child: new Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          margin: EdgeInsets.all(10),
+                          child: CircularProgressIndicator()),
+                      new Text("Sedang upload data bangunan"),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : () {};
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
     String uid = idpref;
-    final response = await http.post(BaseUrl.rekam, body: {
-      "nopasal": nopAsal.toString(),
-      "objekjalan": objekNamajalan.toString(),
-      "objekblok": objekBlok.toString(),
-      "objekdesa": objekDesa.toString(),
-      "objekrw": objekRw.toString(),
-      "objekrt": objekRt.toString(),
-      "subjekstatus": _status.toString(),
-      "subjekpekerjaan": _kerja.toString(),
-      "subjeknama": subjekNama.toString(),
-      "subjeknamajalan": subjekNamaJalan.toString(),
-      "subjekkab": subjekKab.toString(),
-      "subjekdesa": subjekDesa.toString(),
-      "subjekrw": subjekRw.toString(),
-      "subjekrt": subjekRt.toString(),
-      "subjekktp": subjekKtp.toString(),
-      "subjektelp": subjekTelp.toString(),
-      "uid": uid.toString(),
-      "uuid": formattedDate.toString(),
-      "tanahluas": tanahLuas.toString(),
-      "tanahjenis": (_value2 + 1).toString(),
-      "nip": nip.toString(),
-      "andjwt": andjwt.toString()
-    });
 
-    if (simbang = false) {
+    if (simbang == 0) {
+      final response = await http.post(BaseUrl.rekam, body: {
+        "nopasal": nopAsal.toString(),
+        "objekjalan": objekNamajalan.toString(),
+        "objekblok": objekBlok.toString(),
+        "objekdesa": objekDesa.toString(),
+        "objekrw": objekRw.toString(),
+        "objekrt": objekRt.toString(),
+        "subjekstatus": _status.toString(),
+        "subjekpekerjaan": _kerja.toString(),
+        "subjeknama": subjekNama.toString(),
+        "subjeknamajalan": subjekNamaJalan.toString(),
+        "subjekkab": subjekKab.toString(),
+        "subjekdesa": subjekDesa.toString(),
+        "subjekrw": subjekRw.toString(),
+        "subjekrt": subjekRt.toString(),
+        "subjekktp": subjekKtp.toString(),
+        "subjektelp": subjekTelp.toString(),
+        "uid": uid.toString(),
+        "uuid": formattedDate.toString(),
+        "tanahluas": tanahLuas.toString(),
+        "tanahjenis": (_value2 + 1).toString(),
+        "nip": nip.toString(),
+        "andjwt": andjwt.toString()
+      });
       final data = jsonDecode(response.body);
 
-      new Future.delayed(new Duration(milliseconds: 200), () async {
+      new Future.delayed(new Duration(milliseconds: 300), () async {
         int value = data['value'];
         int tambang = data['tambang'];
         String msg = data['pesan'];
         print(msg);
+        Timer(Duration(seconds: 1), () {
+          Navigator.pop(context);
+        });
         if (value == 1) {
+          setState(() {
+            simbang = 1;
+          });
+          simpanbangunan();
           _uploadImagesSertipikat();
           _uploadImagesSppt();
           _uploadImagesKtp();
-          setState(() {
-            simbang = true;
-          });
           Timer(Duration(seconds: 3), () {
             Fluttertoast.showToast(
-                msg: "BERHASIL",
+                msg: "BERHASIL UPLOAD",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -1040,15 +1059,14 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
             Timer(Duration(seconds: 2), () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
             });
           });
           print("BERHASIL");
         } else if (value == 0) {
           Timer(Duration(seconds: 2), () {
-            Navigator.pop(context);
             Fluttertoast.showToast(
-                msg: "GAGAL",
+                msg: "GAGAL UPLOAD",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -1088,36 +1106,12 @@ class _PerekamanPageState extends State<PerekamanPage> {
         }
       });
     } else {
-      Navigator.pop(context);
+      print(simbang);
       simpanbangunan();
     }
   }
 
   simpanbangunan() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {},
-          child: Dialog(
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    margin: EdgeInsets.all(10),
-                    child: CircularProgressIndicator()),
-                new Text("Sedang upload data"),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    Future.delayed(new Duration(milliseconds: 3000), () async {
-      Navigator.of(context).pop();
-    });
-
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
     String uid = idpref;
@@ -1140,18 +1134,24 @@ class _PerekamanPageState extends State<PerekamanPage> {
     });
 
     final data = jsonDecode(response.body);
-    Future.delayed(new Duration(milliseconds: 1000), () async {
+    Future.delayed(new Duration(milliseconds: 0), () async {
       int valbang = data['bangunan'];
       print(valbang);
       if (valbang == 1) {
         Fluttertoast.showToast(
-            msg: "BERHASIL UPLOAD DATA BANGUNAN",
+            msg: "BERHASIL TAMBAH DATA BANGUNAN",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,
-            backgroundColor: Colors.orange.withOpacity(0.7),
+            backgroundColor: Colors.green.withOpacity(0.9),
             textColor: Colors.white,
             fontSize: 16.0);
+        bangunanLuasController.clear();
+        bangunanLantaiJumlahController.clear();
+        bangunanTahunBangunController.clear();
+        bangunanTahunRenovController.clear();
+        bangunanListrikDayaController.clear();
+        FocusScope.of(context).requestFocus(_bangunanLuas);
         setState(() {
           _bangunanke = _bangunanke + 1;
           print("tambah ke => $_bangunanke");
@@ -1280,11 +1280,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => nopAsal = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               // controller: nopAsalController,
               obscureText: false,
               decoration: InputDecoration(
@@ -1314,7 +1309,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
           TextFormField(
               textCapitalization: TextCapitalization.characters,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(30),
+                LengthLimitingTextInputFormatter(35),
                 BlacklistingTextInputFormatter(
                     RegExp("[/`~!@#%^&=+*()?<>{[}]")),
               ],
@@ -1329,11 +1324,12 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 _fieldFocusChange(context, _objekNamaJalanFocus, _objekBlok);
               },
               textInputAction: TextInputAction.next,
-              onSaved: (e) => objekNamajalan = e,
+              onSaved: (e) => objekNamajalan = e.toUpperCase(),
               onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
+                if (objekNamaJalanController.text != e.toUpperCase())
+                  objekNamaJalanController.value = objekNamaJalanController
+                      .value
+                      .copyWith(text: e.toUpperCase());
               },
               controller: objekNamaJalanController,
               obscureText: false,
@@ -1732,11 +1728,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 _fieldFocusChange(context, _subjekNama, _subjekNamaJalan);
               },
               textInputAction: TextInputAction.next,
-              onSaved: (e) => subjekNama = e,
+              onSaved: (e) => subjekNama = e.toUpperCase(),
               onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
+                if (subjekNamaController.text != e.toUpperCase())
+                  subjekNamaController.value = subjekNamaController.value
+                      .copyWith(text: e.toUpperCase());
               },
               controller: subjekNamaController,
               obscureText: false,
@@ -1777,11 +1773,12 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 _fieldFocusChange(context, _subjekNamaJalan, _subjekKab);
               },
               textInputAction: TextInputAction.next,
-              onSaved: (e) => subjekNamaJalan = e,
+              onSaved: (e) => subjekNamaJalan = e.toUpperCase(),
               onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
+                if (subjekNamaJalanController.text != e.toUpperCase())
+                  subjekNamaJalanController.value = subjekNamaJalanController
+                      .value
+                      .copyWith(text: e.toUpperCase());
               },
               controller: subjekNamaJalanController,
               obscureText: false,
@@ -1827,11 +1824,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 _fieldFocusChange(context, _subjekKab, _subjekDesa);
               },
               textInputAction: TextInputAction.next,
-              onSaved: (e) => subjekKab = e,
+              onSaved: (e) => subjekKab = e.toUpperCase(),
               onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
+                if (subjekKabController.text != e.toUpperCase())
+                  subjekKabController.value =
+                      subjekKabController.value.copyWith(text: e.toUpperCase());
               },
               controller: subjekKabController,
               obscureText: false,
@@ -1877,12 +1874,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 _fieldFocusChange(context, _subjekDesa, _subjekRw);
               },
               textInputAction: TextInputAction.next,
-              onSaved: (e) => subjekDesa = e,
+              onSaved: (e) => subjekDesa = e.toUpperCase(),
               onChanged: (e) {
-                setState(() {
-                  e.toString().toUpperCase();
-                  // validationText = "";
-                });
+                if (subjekDesaController.text != e.toUpperCase())
+                  subjekDesaController.value = subjekDesaController.value
+                      .copyWith(text: e.toUpperCase());
               },
               controller: subjekDesaController,
               obscureText: false,
@@ -1929,12 +1925,52 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => subjekRw = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: subjekRwController,
+              obscureText: false,
+              decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  fillColor: Colors.white,
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+   Widget _dataSubjekRt() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "RT",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+              maxLength: 3,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              keyboardType: TextInputType.number,
+              validator: (e) {
+                if (e.isNotEmpty) {
+                  if (e.length < 3) {
+                    return "RT wajib diisi 3 digit nomor";
+                  }
+                }
+              },
+              focusNode: _subjekRt,
+              onFieldSubmitted: (term) {
+                _fieldFocusChange(context, _subjekRt, _subjekKtp);
+              },
+              textInputAction: TextInputAction.next,
+              onSaved: (e) => subjekRt = e,
+              controller: subjekRtController,
               obscureText: false,
               decoration: InputDecoration(
                   border: UnderlineInputBorder(
@@ -1963,28 +1999,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
           TextFormField(
               // maxLength: 29,
               inputFormatters: <TextInputFormatter>[
-                LengthLimitingTextInputFormatter(16),
+                LengthLimitingTextInputFormatter(20),
                 WhitelistingTextInputFormatter.digitsOnly
               ],
               keyboardType: TextInputType.number,
-              // validator: (e) {
-              //   if (e.isEmpty) {
-              //     return "No HP wajib diisi";
-              //     // } else if (e.length < 16) {
-              //     //   return "No HP wajib diisi";
-              //   }
-              // },
               focusNode: _subjekTelp,
               onFieldSubmitted: (term) {
-                _fieldFocusChange(context, _subjekTelp, _subjekKtp);
+                _fieldFocusChange(context, _subjekTelp, _tanahLuas);
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => subjekTelp = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: subjekTelpController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2026,66 +2050,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               focusNode: _subjekKtp,
               onFieldSubmitted: (term) {
-                _fieldFocusChange(context, _subjekKtp, _tanahLuas);
+                _fieldFocusChange(context, _subjekKtp, _subjekTelp);
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => subjekKtp = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: subjekKtpController,
-              obscureText: false,
-              decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                      borderRadius: BorderRadius.circular(5.0)),
-                  fillColor: Colors.white,
-                  filled: true))
-        ],
-      ),
-    );
-  }
-
-  Widget _dataSubjekRt() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "RT",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-              maxLength: 3,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              keyboardType: TextInputType.number,
-              validator: (e) {
-                if (e.isNotEmpty) {
-                  if (e.length < 3) {
-                    return "RT wajib diisi 3 digit nomor";
-                  }
-                }
-              },
-              focusNode: _subjekRt,
-              onFieldSubmitted: (term) {
-                _fieldFocusChange(context, _subjekRt, _subjekKtp);
-              },
-              textInputAction: TextInputAction.next,
-              onSaved: (e) => subjekRt = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
-              controller: subjekRtController,
               obscureText: false,
               decoration: InputDecoration(
                   border: UnderlineInputBorder(
@@ -2116,22 +2085,17 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 WhitelistingTextInputFormatter.digitsOnly
               ],
               keyboardType: TextInputType.number,
-              // validator: (e) {
-              //   if (e.isEmpty) {
-              //     return "No KTP wajib diisi";
-              //   }
-              // },
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Luas tanah wajib diisi";
+                }
+              },
               focusNode: _tanahLuas,
               onFieldSubmitted: (term) {
                 _tanahLuas.unfocus();
               },
               textInputAction: TextInputAction.done,
               onSaved: (e) => tanahLuas = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: tanahLuasController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2503,7 +2467,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
             height: 10,
           ),
           TextFormField(
-              // textCapitalization: TextCapitalization.characters,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(10),
                 WhitelistingTextInputFormatter(RegExp("[0123456789\\.\\,]")),
@@ -2521,11 +2484,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => bangunanLuas = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: bangunanLuasController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2570,11 +2528,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => bangunanLantaiJumlah = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: bangunanLantaiJumlahController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2619,11 +2572,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => bangunanTahunBangun = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: bangunanTahunBangunController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2656,23 +2604,18 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 WhitelistingTextInputFormatter.digitsOnly
               ],
               keyboardType: TextInputType.number,
-              // validator: (e) {
-              //   if (e.isEmpty) {
-              //     return "Nama jalan wajib diisi";
-              //   }
-              // },
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Nama jalan wajib diisi";
+                }
+              },
               focusNode: _bangunanTahunRenov,
               onFieldSubmitted: (term) {
                 _fieldFocusChange(
-                    context, _bangunanTahunRenov, _bangunanJumlah);
+                    context, _bangunanTahunRenov, _bangunanListrikDaya);
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => bangunanTahunRenov = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: bangunanTahunRenovController,
               obscureText: false,
               decoration: InputDecoration(
@@ -2713,16 +2656,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
               focusNode: _bangunanListrikDaya,
               onFieldSubmitted: (term) {
                 _bangunanListrikDaya.unfocus();
-                // _fieldFocusChange(
-                //     context, _bangunanJumlah, _bangunanListrikDaya);
               },
               textInputAction: TextInputAction.done,
               onSaved: (e) => bangunanListrikDaya = e,
-              onChanged: (e) {
-                setState(() {
-                  // validationText = "";
-                });
-              },
               controller: bangunanListrikDayaController,
               obscureText: false,
               decoration: InputDecoration(
@@ -4094,26 +4030,26 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
   Widget _tambahButton() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: 0),
       padding: EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         boxShadow: <BoxShadow>[],
-        color: Colors.green[600],
+        color: Colors.green[700],
       ),
       child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           splashColor: Colors.green.withOpacity(0.5),
           onTap: () {
             _bangunanLuas.requestFocus();
             check1();
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 1.75,
-            padding: EdgeInsets.symmetric(vertical: 15),
+            width: MediaQuery.of(context).size.width / 1.40,
+            padding: EdgeInsets.symmetric(vertical: 10),
             alignment: Alignment.center,
             child: Text(
               'TAMBAH BANGUNAN',

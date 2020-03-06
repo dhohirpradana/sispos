@@ -75,8 +75,6 @@ class _LoginPageState extends State<LoginPage> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      // savePref(value, id, nip, name, level, token);
-      print("uid : $id, $nip, $pass");
       login();
     }
     // }
@@ -143,14 +141,12 @@ class _LoginPageState extends State<LoginPage> {
     final data = jsonDecode(response.body);
 
     new Future.delayed(new Duration(milliseconds: 0), () async {
-      // String pass = data['pass'];
       int value = data['value'];
       String id = data['id'];
       String level = data['level'];
       String nip = data['nip'];
       String name = data['name'];
       String token = data['token'];
-      // String pass = data['pass'];
       if (value == 1) {
         setState(() {
           savePref(value, id, nip, name, level, token);
@@ -161,9 +157,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pop(context);
         validationText = "";
         if (level == "1" || level == "2" || level == "3") {
-          print("value : $value");
           print(nip);
-          print("id : $id");
           print(name);
           print(level);
           setState(() {

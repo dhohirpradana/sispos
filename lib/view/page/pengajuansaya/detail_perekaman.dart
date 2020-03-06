@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
-import 'package:sispos_pajak/view/page/perekamansaya.dart';
 
 class DetailPerekaman extends StatefulWidget {
   String id;
@@ -169,11 +168,11 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
       subjekRt = data['subjek_rt'];
 
       tanahJenis = data['tanah_jenis'];
+
+      print(subjekRw);
       if (tanahJenis == "1") {
         print(data['bangunan_luas']);
       }
-      // print(nopasal);
-      // print(objek_nama_jalan);
     });
     return "Success!";
   }
@@ -241,6 +240,11 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
       _subjekStatus(),
       _subjekKerja(),
       _dataSubjekNama(),
+      _dataSubjeknamaJalan(),
+      _dataSubjekKab(),
+      _dataSubjekDesa(),
+      _dataSubjekRw(),
+      _dataSubjekRt(),
       SizedBox(
         height: 5,
       ),
@@ -249,40 +253,66 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
   }
 
   Widget _button() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isEnableEdit = true;
+                });
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2.3,
+                color: Colors.green,
+                margin: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 15, top: 15),
+                child: Center(
+                  child: Text(
+                    "EDIT",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2.3,
+                color: Colors.red,
+                margin: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 15, top: 15),
+                child: Center(
+                  child: Text(
+                    "BATAL",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              isEnableEdit = true;
-            });
+            // Navigator.pop(context);
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 2.3,
-            color: Colors.green,
+            width: 2 * (MediaQuery.of(context).size.width / 2.3) + 30,
+            color: Colors.blue,
             margin: EdgeInsets.only(bottom: 15),
             padding: EdgeInsets.only(bottom: 15, top: 15),
             child: Center(
               child: Text(
-                "EDIT",
+                "SIMPAN",
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
               ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2.3,
-            color: Colors.red,
-            margin: EdgeInsets.only(bottom: 15),
-            padding: EdgeInsets.only(bottom: 15, top: 15),
-            child: Center(
-              child: Text("BATAL"),
             ),
           ),
         ),
@@ -292,7 +322,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
 
   Widget _nopAsal() {
     return IgnorePointer(
-      ignoring: !isEnableEdit,
+      ignoring: true,
       child: Container(
         margin: EdgeInsets.only(top: 5, bottom: 0),
         child: Column(
@@ -353,7 +383,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
                   _fieldFocusChange(context, _objekNamaJalanFocus, _objekBlok);
                 },
                 textInputAction: TextInputAction.next,
-                onSaved: (e) => objekNamajalan = e,
+                onSaved: (e) => objekNamajalan = e.toUpperCase(),
                 obscureText: false,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -471,12 +501,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
                   _fieldFocusChange(context, _objekRw, _objekRt);
                 },
                 textInputAction: TextInputAction.next,
-                onSaved: (e) => objekRw = e,
-                onChanged: (e) {
-                  setState(() {
-                    // validationText = "";
-                  });
-                },
+                onSaved: (e) => objekRw = e.toUpperCase(),
                 obscureText: false,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -524,12 +549,7 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
                   _fieldFocusChange(context, _objekRt, _subjekNama);
                 },
                 textInputAction: TextInputAction.next,
-                onSaved: (e) => objekRt = e,
-                onChanged: (e) {
-                  setState(() {
-                    // validationText = "";
-                  });
-                },
+                onSaved: (e) => objekRt = e.toUpperCase(),
                 obscureText: false,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -857,12 +877,258 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
                   _fieldFocusChange(context, _subjekNama, _subjekNamaJalan);
                 },
                 textInputAction: TextInputAction.next,
-                onSaved: (e) => subjekNama = e,
-                onChanged: (e) {
-                  setState(() {
-                    // validationText = "";
-                  });
+                onSaved: (e) => subjekNama = e.toUpperCase(),
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekKab() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Kabupaten",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekKab,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(15),
+                  BlacklistingTextInputFormatter(
+                      RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                ],
+                keyboardType: TextInputType.text,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Kabupaten wajib diisi";
+                  }
                 },
+                focusNode: _subjekKab,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekKab, _subjekDesa);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekKab = e.toUpperCase(),
+                onChanged: (e) {
+                  if (subjekKabController.text != e.toUpperCase())
+                    subjekKabController.value = subjekKabController.value
+                        .copyWith(text: e.toUpperCase());
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjeknamaJalan() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Nama jalan",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekNamaJalan,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(30),
+                  BlacklistingTextInputFormatter(
+                      RegExp("[/`~!@#%^&=+*()?<>{[}]")),
+                ],
+                keyboardType: TextInputType.text,
+                focusNode: _subjekNamaJalan,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekNamaJalan, _subjekKab);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekNamaJalan = e.toUpperCase(),
+                onChanged: (e) {
+                  if (subjekNamaJalanController.text != e.toUpperCase())
+                    subjekNamaJalanController.value = subjekNamaJalanController
+                        .value
+                        .copyWith(text: e.toUpperCase());
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekDesa() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Desa",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekDesa,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(30),
+                  BlacklistingTextInputFormatter(
+                      RegExp("[0123456789/`~!@#%^&-=+*()?<>{[}.,]")),
+                ],
+                keyboardType: TextInputType.text,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Desa wajib diisi";
+                  }
+                },
+                focusNode: _subjekDesa,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekDesa, _subjekRw);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekDesa = e.toUpperCase(),
+                onChanged: (e) {
+                  if (subjekDesaController.text != e.toUpperCase())
+                    subjekDesaController.value = subjekDesaController.value
+                        .copyWith(text: e.toUpperCase());
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekRw() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "RW",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekRw,
+                maxLength: 2,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isNotEmpty) {
+                    if (e.length < 2) {
+                      return "RW wajib diisi 2 digit nomor";
+                    }
+                  }
+                },
+                focusNode: _subjekRw,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekRw, _subjekRt);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekRw = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekRt() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "RT",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekRt,
+                maxLength: 3,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isNotEmpty) {
+                    if (e.length < 3) {
+                      return "RT wajib diisi 3 digit nomor";
+                    }
+                  }
+                },
+                focusNode: _subjekRt,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekRt, _subjekKtp);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekRt = e,
                 obscureText: false,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(

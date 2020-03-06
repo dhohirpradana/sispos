@@ -45,7 +45,7 @@ class _BootScreenState extends State<BootScreen> {
   }
 
   startTime() async {
-    var _duration = new Duration(seconds: 1);
+    var _duration = new Duration(milliseconds: 3540);
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -78,15 +78,16 @@ class _BootScreenState extends State<BootScreen> {
             children: <Widget>[
               Container(
                 color: Colors.transparent,
-                height: MediaQuery.of(context).size.width / 2.5,
-                width: MediaQuery.of(context).size.width / 2.5,
+                width: MediaQuery.of(context).size.width / 4.5,
                 child: Stack(
                   children: <Widget>[
                     Container(
                         color: Colors.transparent,
                         child: Column(
                           children: <Widget>[
-                            Image(image: AssetImage('assets/city1.jpg')),
+                            Image(
+                                image: AssetImage(
+                                    'lib/view/assets/images/logokabpati.png')),
                           ],
                         )),
                     Column(
@@ -96,12 +97,15 @@ class _BootScreenState extends State<BootScreen> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 5,
+              ),
               Text(
                 "SISPOS PAJAK",
                 style: TextStyle(
                     fontFamily: "BlackJack",
-                    fontSize: 23,
-                    color: Color(0xff8fe3fd).withOpacity(0.9),
+                    fontSize: MediaQuery.of(context).size.width / 22,
+                    color: Color(0xff0e2f44).withOpacity(0.9),
                     fontWeight: FontWeight.w600),
               ),
             ],
