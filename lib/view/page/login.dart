@@ -150,8 +150,8 @@ class _LoginPageState extends State<LoginPage> {
       if (value == 1) {
         setState(() {
           savePref(value, id, nip, name, level, token);
-          print("id user : $id");
-          print("andjwt : $token");
+          // print("id user : $id");
+          // print("andjwt : $token");
           _loginStatus = LoginStatus.signIn;
         });
         Navigator.pop(context);
@@ -166,8 +166,6 @@ class _LoginPageState extends State<LoginPage> {
           });
           var duration = const Duration(seconds: 0);
           return Timer(duration, () {
-            // Navigator.of(context).pushReplacement(MaterialPageRoute(
-            //     builder: (BuildContext context) => HomePage()));
           });
         } else {}
       } else if (value == 0) {

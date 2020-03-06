@@ -1198,16 +1198,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                "Jenis Penggunaan Bangunan",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-              _dataBangunanPenggunaan(),
               _dataBangunanLuas(),
               _databangunanLantaiJumlah(),
               _dataBangunanBangun(),
               _dataBangunanRenov(),
               _dataBangunanListrik(),
+              Text(
+                "Jenis Penggunaan Bangunan",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              _dataBangunanPenggunaan(),
               _dataBangunanKondisi(),
               _dataBangunanKonstruksi(),
               _dataBangunanAtap(),
@@ -1938,7 +1938,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     );
   }
 
-   Widget _dataSubjekRt() {
+  Widget _dataSubjekRt() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -2568,7 +2568,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
               focusNode: _bangunanTahunBangun,
               onFieldSubmitted: (term) {
                 _fieldFocusChange(
-                    context, _bangunanTahunBangun, _bangunanTahunBangun);
+                    context, _bangunanTahunBangun, _bangunanTahunRenov);
               },
               textInputAction: TextInputAction.next,
               onSaved: (e) => bangunanTahunBangun = e,

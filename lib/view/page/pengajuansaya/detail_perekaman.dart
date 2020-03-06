@@ -166,13 +166,32 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
       subjekDesa = data['subjek_desa'];
       subjekRw = data['subjek_rw'];
       subjekRt = data['subjek_rt'];
+      subjekKtp = data['subjek_ktp'];
+      subjekTelp = data['subjek_hp'];
 
-      tanahJenis = data['tanah_jenis'];
+      _value = int.parse(data['subjek_status']) - 1;
+      _value1 = int.parse(data['subjek_kerja']) - 1;
+      _value2 = int.parse(data['tanah_jenis']) - 1;
 
-      print(subjekRw);
-      if (tanahJenis == "1") {
-        print(data['bangunan_luas']);
+      tanahLuas = data['tanah_luas'];
+
+      if (_value2 == 0) {
+        bangunanLuas = data['bangunan_luas'];
+        bangunanLantaiJumlah = data['bangunan_lj'];
+        bangunanTahunBangun = data['bangunan_bangun'];
+        bangunanTahunRenov = data['bangunan_renov'];
+        bangunanListrikDaya = data['bangunan_listrik'];
+
+        _value3 = int.parse(data['bangunan_penggunaan']) - 1;
+        _value4 = int.parse(data['bangunan_kondisi']) - 1;
+        _value5 = int.parse(data['bangunan_konstruksi']) - 1;
+        _value6 = int.parse(data['bangunan_atap']) - 1;
+        _value7 = int.parse(data['bangunan_dinding']) - 1;
+        _value8 = int.parse(data['bangunan_lantai']) - 1;
+        _value9 = int.parse(data['bangunan_langit']) - 1;
       }
+
+      print("test data : $bangunanLantaiJumlah $bangunanListrikDaya");
     });
     return "Success!";
   }
@@ -245,6 +264,21 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
       _dataSubjekDesa(),
       _dataSubjekRw(),
       _dataSubjekRt(),
+      _dataSubjekKtp(),
+      _dataSubjekHp(),
+      Container(
+        // margin: EdgeInsets.only(bottom: 15),
+        padding: EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width,
+        color: secondColor,
+        child: Text(
+          "DATA TANAH",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+      _dataTanahLuas(),
+      _dataTanahJenis(),
+      (_value2 == 0) ? _rincianBangunan() : SizedBox(),
       SizedBox(
         height: 5,
       ),
@@ -1136,6 +1170,1348 @@ class _DetailPengajuanState extends State<DetailPerekaman> {
                         borderRadius: BorderRadius.circular(5.0)),
                     fillColor: Colors.white,
                     filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekKtp() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "No KTP",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekKtp,
+                maxLength: 16,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "No KTP wajib diisi";
+                  } else if (e.length < 16) {
+                    return "No KTP wajib diisi 16 digit";
+                  }
+                },
+                focusNode: _subjekKtp,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekKtp, _subjekTelp);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekKtp = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataSubjekHp() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "No HP/ Telp",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: subjekTelp,
+                inputFormatters: <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(20),
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                focusNode: _subjekTelp,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _subjekTelp, _tanahLuas);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => subjekTelp = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataTanahLuas() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Luas Tanah",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: tanahLuas,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Luas tanah wajib diisi";
+                  }
+                },
+                focusNode: _tanahLuas,
+                onFieldSubmitted: (term) {
+                  _tanahLuas.unfocus();
+                },
+                textInputAction: TextInputAction.done,
+                onSaved: (e) => tanahLuas = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataTanahJenis() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Jenis Tanah",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Colors.purple[500],
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Tanah + Bangunan",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value2 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _bangunanke = selected ? 1 : _bangunanke;
+                      print("bangunan ke : $_bangunanke");
+                      _istanahbangunan = 1;
+                      _value2 = 0;
+                      _jenisTanah();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Colors.purple[500],
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Kavling",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value2 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _bangunanke = selected ? 0 : 0;
+                      print("bangunan ke : $_bangunanke");
+                      _istanahbangunan = 0;
+                      _value2 = 1;
+                      _jenisTanah();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Colors.purple[500],
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Tanah Kosong",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value2 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _bangunanke = selected ? 0 : 0;
+                      print("bangunan ke : $_bangunanke");
+                      _istanahbangunan = 0;
+                      _value2 = 2;
+                      _jenisTanah();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _rincianBangunan() {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10),
+          width: MediaQuery.of(context).size.width,
+          color: secondColor,
+          child: Text(
+            "RINCIAN DATA BANGUNAN",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
+          // margin: EdgeInsets.only(bottom: 15),
+          padding: EdgeInsets.only(top: 10, bottom: 0, right: 10),
+          width: MediaQuery.of(context).size.width,
+          // color: secondColor,
+          child: Material(
+            elevation: 2,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                "TAMBAH BANGUNAN - $_bangunanke",
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(bottom: 19, top: 10),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _dataBangunanLuas(),
+              _databangunanLantaiJumlah(),
+              _dataBangunanBangun(),
+              _dataBangunanRenov(),
+              _dataBangunanListrik(),
+              Text(
+                "Jenis Penggunaan Bangunan",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              _dataBangunanPenggunaan(),
+              _dataBangunanKondisi(),
+              _dataBangunanKonstruksi(),
+              _dataBangunanAtap(),
+              _dataBangunanDinding(),
+              _dataBangunanLantai(),
+              _dataBangunanLangit()
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _dataBangunanPenggunaan() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Wrap(
+        alignment: WrapAlignment.start,
+        spacing: 12.0,
+        children: <Widget>[
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Perumahan",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 0,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 0 : 0;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Perkantoran Swasta",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 1,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 1 : 1;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Pabrik",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 2,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 2 : 2;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Toko / Apotik / Pasar / Ruko",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 3,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 3 : 3;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Rumah Sakit Klinik",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 4,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 4 : 4;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Olahraga / Rekresi",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 5,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 5 : 5;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Hotel / Wisma",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 6,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 6 : 6;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Bengkel / Gudang / Pertanian",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 7,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 7 : 7;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Gedung Pemerintahan",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 8,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 8 : 8;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Lain-lain",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 9,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 9 : 9;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Bangunan Tak Kena Pajak",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 10,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 10 : 10;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Bangunan Parkir",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 11,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 11 : 11;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Apartemen",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 12,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 12 : 12;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Pompa Mobil",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 13,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 13 : 13;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Tangki Minyak",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 14,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 14 : 14;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+          ChoiceChip(
+            pressElevation: 0.0,
+            selectedColor: Colors.brown[500],
+            backgroundColor: Colors.blue[500],
+            label: Text(
+              "Gedung Sekolah",
+              style: TextStyle(color: Colors.white),
+            ),
+            selected: _value3 == 15,
+            onSelected: (bool selected) {
+              setState(() {
+                _value3 = selected ? 15 : 15;
+                _penggunaanBangunan();
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dataBangunanLuas() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Luas Bangunan",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: bangunanLuas,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10),
+                  WhitelistingTextInputFormatter(RegExp("[0123456789\\.\\,]")),
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Luas bangunan wajib diisi";
+                  }
+                },
+                focusNode: _bangunanLuas,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(
+                      context, _bangunanLuas, _bangunanLantaiJumlah);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => bangunanLuas = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _databangunanLantaiJumlah() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Jumlah Lantai",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: bangunanLantaiJumlah,
+                inputFormatters: <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(10),
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Jumlah lantai wajib diisi";
+                  }
+                },
+                focusNode: _bangunanLantaiJumlah,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(
+                      context, _bangunanLantaiJumlah, _bangunanTahunBangun);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => bangunanLantaiJumlah = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanBangun() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Tahun Dibangun",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: bangunanTahunBangun,
+                maxLength: 4,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Tahun dibangun wajib diisi";
+                  }
+                },
+                focusNode: _bangunanTahunBangun,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(
+                      context, _bangunanTahunBangun, _bangunanTahunRenov);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => bangunanTahunBangun = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanRenov() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Tahun Direnovasi",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: bangunanTahunRenov,
+                maxLength: 4,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Nama jalan wajib diisi";
+                  }
+                },
+                focusNode: _bangunanTahunRenov,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(
+                      context, _bangunanTahunRenov, _bangunanListrikDaya);
+                },
+                textInputAction: TextInputAction.next,
+                onSaved: (e) => bangunanTahunRenov = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanListrik() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Daya Listrik Terpasang (WATT)",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                initialValue: bangunanListrikDaya,
+                inputFormatters: <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(10),
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (e) {
+                  if (e.isEmpty) {
+                    return "Daya listrik terpasang wajib diisi";
+                  }
+                },
+                focusNode: _bangunanListrikDaya,
+                onFieldSubmitted: (term) {
+                  _bangunanListrikDaya.unfocus();
+                },
+                textInputAction: TextInputAction.done,
+                onSaved: (e) => bangunanListrikDaya = e,
+                obscureText: false,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    fillColor: Colors.white,
+                    filled: true))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanKondisi() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Kondisi Pada Umumnya",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Sangat Baik",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value4 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value4 = selected ? 0 : 0;
+                      _kondisiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Baik",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value4 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value4 = selected ? 1 : 1;
+                      _kondisiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Sedang",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value4 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value4 = selected ? 2 : 2;
+                      _kondisiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Jelek",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value4 == 3,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value4 = selected ? 3 : 3;
+                      _kondisiBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanKonstruksi() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Konstruksi",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff4d089a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Baja",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value5 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value5 = selected ? 0 : 0;
+                      _konstruksiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff4d089a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Beton",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value5 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value5 = selected ? 1 : 1;
+                      _konstruksiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff4d089a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Batu Bata",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value5 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value5 = selected ? 2 : 2;
+                      _konstruksiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff4d089a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Kayu",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value5 == 3,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value5 = selected ? 3 : 3;
+                      _konstruksiBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanAtap() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Atap",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff5b8c5a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Decrabon / Beton / Genteng Glazur",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value6 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value6 = selected ? 0 : 0;
+                      _atapBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff5b8c5a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Genteng Beton / Alumunium",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value6 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value6 = selected ? 1 : 1;
+                      _atapBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff5b8c5a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Genteng Biasa",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value6 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value6 = selected ? 2 : 2;
+                      _atapBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff5b8c5a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Asbes",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value6 == 3,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value6 = selected ? 3 : 3;
+                      _atapBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff5b8c5a),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Seng",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value6 == 4,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value6 = selected ? 4 : 4;
+                      _atapBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanDinding() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Dinding",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffba6b57),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Kaca / Alumunium",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value7 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value7 = selected ? 0 : 0;
+                      _dindingBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffba6b57),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Beton",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value7 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value7 = selected ? 1 : 1;
+                      _dindingBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffba6b57),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Batu Bata / Conblok",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value7 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value7 = selected ? 2 : 2;
+                      _dindingBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffba6b57),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Kayu",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value7 == 3,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value7 = selected ? 3 : 3;
+                      _dindingBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffba6b57),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Seng",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value7 == 4,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value7 = selected ? 4 : 4;
+                      _dindingBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanLantai() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 19, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Lantai",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff6e5773),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Marmer",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value8 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value8 = selected ? 0 : 0;
+                      _lantaiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff6e5773),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Keramik",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value8 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value8 = selected ? 1 : 1;
+                      _lantaiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff6e5773),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Teraso",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value8 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value8 = selected ? 2 : 2;
+                      _lantaiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff6e5773),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Ubin PC / Papan",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value8 == 3,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value8 = selected ? 3 : 3;
+                      _lantaiBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xff6e5773),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Semen",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value8 == 4,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value8 = selected ? 4 : 4;
+                      _lantaiBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dataBangunanLangit() {
+    return IgnorePointer(
+      ignoring: !isEnableEdit,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 0, top: 10),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Langit - Langit",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 12.0,
+              children: <Widget>[
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Akustik / Jati",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value9 == 0,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value9 = selected ? 0 : 0;
+                      _langitBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Triplek / Asbes Bambu",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value9 == 1,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value9 = selected ? 1 : 1;
+                      _langitBangunan();
+                    });
+                  },
+                ),
+                ChoiceChip(
+                  pressElevation: 0.0,
+                  selectedColor: Color(0xffc02739),
+                  backgroundColor: Colors.blue[500],
+                  label: Text(
+                    "Tidak Ada",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  selected: _value9 == 2,
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _value9 = selected ? 2 : 2;
+                      _langitBangunan();
+                    });
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

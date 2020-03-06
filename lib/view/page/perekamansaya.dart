@@ -86,8 +86,11 @@ class HomePageState extends State<RekamanSayaPage> {
                     );
                   },
                   child: Container(
-                    padding:
-                        EdgeInsets.only(left: 9, right: 9, top: 7, bottom: 7),
+                    padding: EdgeInsets.only(
+                        left: 9,
+                        right: 9,
+                        top: MediaQuery.of(context).size.width / 21,
+                        bottom: MediaQuery.of(context).size.width / 21),
                     child: Row(
                       children: <Widget>[
                         // Flexible(child: Text(data[index]["id"])),
