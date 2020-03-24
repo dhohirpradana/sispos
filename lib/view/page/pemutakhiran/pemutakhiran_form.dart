@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sispos_pajak/api/api.dart';
 
-class DetailPerekaman extends StatefulWidget {
+class PemutakhiranForm extends StatefulWidget {
   String id;
-  DetailPerekaman({this.id});
+  PemutakhiranForm({this.id});
   @override
   _DetailPengajuanState createState() => _DetailPengajuanState();
 }
 
-class _DetailPengajuanState extends State<DetailPerekaman> {
+class _DetailPengajuanState extends State<PemutakhiranForm> {
   Color primaryColor = Color(0xff0e2f44);
   Color secondColor = Color(0xff088da5);
 

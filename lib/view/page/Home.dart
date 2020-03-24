@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sispos_pajak/view/page/pemutakhiran/pemutakhiran_cari.dart';
 import 'package:sispos_pajak/view/page/pengajuan.dart';
 import 'package:sispos_pajak/view/page/perekaman/perekaman_form.dart';
 import 'package:sispos_pajak/view/page/truejukan.dart';
@@ -334,7 +335,13 @@ class _RumahPageState extends State<RumahPage> {
                                                 BorderRadius.circular(10),
                                             splashColor:
                                                 color3.withOpacity(0.5),
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PemutakhiranCari()));
+                                            },
                                             child: Container(
                                               padding: EdgeInsets.all(5),
                                               color: Colors.transparent,

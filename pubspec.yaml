@@ -40,6 +40,11 @@ dependencies:
   flutter_custom_clippers: ^1.1.0
   uuid: 2.0.4
   intl: ^0.16.1
+  bloc: ^3.0.0
+  flutter_bloc: ^3.2.0
+  # dio: ^3.0.9
+  meta: ^1.1.8
+  equatable: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -77,13 +82,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Lobster
-      fonts:
-        - asset: assets/Lobster_1.3.otf
-    - family: BlackJack
-      fonts:
-        - asset: assets/blackjack.otf
+  # fonts:
+  #   - family: Lobster
+  #     fonts:
+  #       - asset: assets/Lobster_1.3.otf
+  #   - family: BlackJack
+  #     fonts:
+  #       - asset: assets/blackjack.otf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

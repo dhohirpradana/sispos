@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   final _key = new GlobalKey<FormState>();
 
   savePref(int value, String id, String nip, String name, String level,
-      String token) async {
+      String token, String instansi) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
@@ -43,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       preferences.setString("nip", nip);
       preferences.setString("name", name);
       preferences.setString("token", token);
+      preferences.setString("instansi", instansi);
     });
   }
 
@@ -127,29 +128,25 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    var content = new Utf8Encoder().convert(pass);
-    var md5 = crypto.md5;
-    var passmd5 = md5.convert(content);
-    String md5pass = passmd5.toString();
-    print(passmd5);
+    final response = await http.post(BaseUrl.login, body: {
+      "nip": nip.toString(),
+      "password": pass
+    }).timeout(const Duration(seconds: 15));
 
-    final response =
-        await http.post(BaseUrl.login, body: {"nip": nip, "pass": md5pass})
-        // .timeout(const Duration(seconds: 15))
-        ;
-
+    // print(response.body);
     final data = jsonDecode(response.body);
 
     new Future.delayed(new Duration(milliseconds: 0), () async {
       int value = data['value'];
-      String id = data['id'];
-      String level = data['level'];
-      String nip = data['nip'];
-      String name = data['name'];
-      String token = data['token'];
       if (value == 1) {
+        String id = data['user']['id'].toString();
+        String level = data['user']['role'].toString();
+        String nip = data['user']['nip'].toString();
+        String name = data['user']['name'].toString();
+        String instansi = data['user']['instansi'].toString();
+        String token = data['token'].toString();
         setState(() {
-          savePref(value, id, nip, name, level, token);
+          savePref(value, id, nip, name, level, token, instansi);
           // print("id user : $id");
           // print("andjwt : $token");
           _loginStatus = LoginStatus.signIn;
@@ -160,21 +157,21 @@ class _LoginPageState extends State<LoginPage> {
           print(nip);
           print(name);
           print(level);
+          print(instansi);
           setState(() {
             validationText = "";
             internetStatusText = "";
           });
           var duration = const Duration(seconds: 0);
-          return Timer(duration, () {
-          });
+          return Timer(duration, () {});
         } else {}
-      } else if (value == 0) {
+      } else if (value == 500) {
         Navigator.pop(context);
         setState(() {
           internetStatusText = "";
-          validationText = "Email atau password salah";
+          validationText = "NIP atau password salah";
         });
-        print("Email atau password salah");
+        print("NIP atau password salah");
       }
     });
   }

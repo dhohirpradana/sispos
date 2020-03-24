@@ -1,9 +1,10 @@
 class BaseUrl {
-  // static String login = "http://192.168.57.1/sispos/login.php";
-  static String login = "https://catbaha.000webhostapp.com/login.php";
+  static String ip = "http://192.168.43.176:8000/api";
+  static String login = "$ip/login";
+
   static String lihat = "https://catbaha.000webhostapp.com/lihat.php";
   static String rekam = "https://catbaha.000webhostapp.com/perekaman.php";
-  static String desa = "https://catbaha.000webhostapp.com/desa.php";
+  static String desa = "$ip/v1/desa";
   static String rekamsaya = "https://catbaha.000webhostapp.com/rekamsaya.php";
   static String rekamdetail =
       "https://catbaha.000webhostapp.com/rekamsaya/rekamdetail.php";
@@ -22,4 +23,6 @@ class BaseUrl {
   // static String rekam = "http://192.168.57.1/sispos/perekaman.php";
   // static String desa = "http://192.168.57.1/sispos/desa.php";
   // static String rekamsaya = "http://192.168.57.1/rekamsaya.php";
+
+  // static String login = "http://192.168.57.1/sispos/login.php";
 }

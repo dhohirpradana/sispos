@@ -103,7 +103,6 @@ class _BootScreenState extends State<BootScreen> {
               Text(
                 "SISPOS PAJAK",
                 style: TextStyle(
-                    fontFamily: "BlackJack",
                     fontSize: MediaQuery.of(context).size.width / 22,
                     color: Color(0xff0e2f44).withOpacity(0.9),
                     fontWeight: FontWeight.w600),
